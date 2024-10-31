@@ -1,0 +1,67 @@
+[
+  {
+    "name": "CAFE GRANO",
+    "cost": 120.00,
+    "unit": "KILOS"
+  },
+  {
+    "name": "LECHE ENTERA",
+    "cost": 25.50,
+    "unit": "LITERS"
+  },
+  {
+    "name": "AZÚCAR",
+    "cost": 35.00,
+    "unit": "KILOS"
+  },
+  {
+    "name": "CHOCOLATE EN POLVO",
+    "cost": 200.00,
+    "unit": "KILOS"
+  },
+  {
+    "name": "ESENCIA DE VAINILLA",
+    "cost": 50.00,
+    "unit": "OUNCES"
+  },
+  {
+    "name": "CANELA",
+    "cost": 75.00,
+    "unit": "KILOS"
+  },
+  {
+    "name": "MANTEQUILLA",
+    "cost": 2.50,
+    "unit": "GRAMS"
+  },
+  {
+    "name": "PAN DE CHOCOLATE",
+    "cost": 10.00,
+    "unit": "OUNCES"
+  },
+  {
+    "name": "FRESAS",
+    "cost": 80.00,
+    "unit": "KILOS"
+  },
+  {
+    "name": "PLÁTANO",
+    "cost": 100.00,
+    "unit": "KILOS"
+  },
+  {
+    "name": "ARÁNDANOS",
+    "cost": 150.00,
+    "unit": "KILOS"
+  },
+  {
+    "name": "Hielo",
+    "cost": 5.00,
+    "unit": "LITERS"
+  },
+  {
+    "name": "Agua",
+    "cost": 0.6,
+    "unit": "LITERS"
+  }
+]

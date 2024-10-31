@@ -1,0 +1,16 @@
+[
+  {
+    "table_number": 1,
+    "client_name": "Vanessa bb",
+    "take_by": {
+      "id": "c587bd0e-c81b-4c89-b16e-8646e82a040d"
+    },
+    "details": [
+      {
+        "dish": {
+          "id": "aab762d0-fe37-460f-82dc-ce82df0c4e58"
+        }
+      }
+    ]
+  }
+]

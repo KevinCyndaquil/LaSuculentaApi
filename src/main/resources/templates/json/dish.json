@@ -1,0 +1,46 @@
+[
+  {
+    "name": "CHOCALE ABUELITA",
+    "sell_price": 89.99,
+    "recipe": [
+      {
+        "quantity": 0.2,
+        "ingredient": {
+          "id": "8bfa7f82-e077-4b07-88be-937f96bcef1a"
+        }
+      },
+      {
+        "quantity": 0.5,
+        "ingredient": {
+          "id": "69601920-eb63-42de-970c-7c93d7455d46"
+        }
+      },
+      {
+        "quantity": 5,
+        "ingredient": {
+          "id": "c59690b2-0674-4a4b-b460-323a88f25289"
+        }
+      }
+    ],
+    "category": "WARM_DRINK"
+  },
+  {
+    "name": "CAFE AMERICANO",
+    "sell_price": 60.99,
+    "recipe": [
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "b96e9ba3-b0ee-4974-a42b-756076709c6d"
+        }
+      },
+      {
+        "quantity": 0.5,
+        "ingredient": {
+          "id": "c3932d24-2cb0-47dd-b0c5-b30ee828b6f5"
+        }
+      }
+    ],
+    "category": "WARM_DRINK"
+  }
+]
