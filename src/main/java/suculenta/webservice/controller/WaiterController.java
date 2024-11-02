@@ -1,14 +1,15 @@
 package suculenta.webservice.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import suculenta.webservice.group.Postable;
+import org.springframework.web.socket.TextMessage;
 import suculenta.webservice.model.Waiter;
-import suculenta.webservice.service.CrudService;
 import suculenta.webservice.service.WaiterService;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Validated
@@ -17,10 +18,21 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class WaiterController implements CrudController<Waiter, UUID> {
-    private final WaiterService waiterService;
+    private final WaiterService service;
 
     @Override
     public WaiterService service() {
-        return waiterService;
+        return service;
+    }
+
+    //@PostMapping("register")
+    @GetMapping("register")
+    public ResponseEntity<List<Waiter>> register(@RequestParam String id) throws IOException {
+        var session = service.getSession(id);
+        if (session != null && session.isOpen()) {
+            session.sendMessage(new TextMessage("comunicación con web socket realizada"));
+        }
+
+        return ResponseEntity.ok(service.select());
     }
 }

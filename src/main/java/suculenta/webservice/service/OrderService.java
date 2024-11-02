@@ -49,6 +49,15 @@ public class OrderService implements CrudService<Order, UUID> {
             .reduce(true, Boolean::logicalAnd);
     }
 
+    public boolean deliver(@NonNull List<Order.Detail> details) {
+        return details.stream()
+            .map(detail -> detailsRepository.deliverOrder(
+                detail.getOrder().getId(),
+                detail.getCns()
+            ))
+            .reduce(true, Boolean::logicalAnd);
+    }
+
     @Override
     @Transactional
     public List<Order> save(@NonNull List<Order> entity) {

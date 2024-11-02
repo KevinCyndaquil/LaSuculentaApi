@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class WaiterService implements CrudService<Waiter, UUID> {
+public class WaiterService implements CrudService<Waiter, UUID>, WebSocketService {
     private final WaiterRepository waiterRepository;
 
     @Override

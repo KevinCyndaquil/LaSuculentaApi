@@ -41,4 +41,11 @@ public class OrderController implements CrudController<Order, UUID> {
             return ResponseEntity.ok("Finished order");
         return ResponseEntity.badRequest().body("Assignment failed");
     }
+
+    @PutMapping("deliver")
+    public ResponseEntity<String> delivered(@RequestBody List<Order.Detail> details) {
+        if (service.deliver(details))
+            return ResponseEntity.ok("Delivered");
+        return ResponseEntity.badRequest().body("Assignment failed");
+    }
 }

@@ -42,6 +42,9 @@ public class Dish {
     @Enumerated(EnumType.STRING)
     Category category;
 
+    @NotNull(groups = Postable.class)
+    byte[] icon;
+
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

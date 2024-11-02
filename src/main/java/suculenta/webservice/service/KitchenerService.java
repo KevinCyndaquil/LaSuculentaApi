@@ -10,7 +10,7 @@ import java.util.UUID;
 @Service
 
 @RequiredArgsConstructor
-public class KitchenerService implements CrudService<Kitchener, UUID> {
+public class KitchenerService implements CrudService<Kitchener, UUID>, WebSocketService {
     private final KitchenerRepository repository;
 
     @Override
