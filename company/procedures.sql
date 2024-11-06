@@ -140,16 +140,32 @@ $$ LANGUAGE plpgsql;
 
 --SELECT * FROM sold_orders('2024-01-01', '2024-12-31');
 
--- Mesero que más ha vendido
-SELECT w.*, sum(1) as orders_taked
-FROM waiters w
-INNER JOIN orders o ON w.id = o.take_by_id
-GROUP BY w.id
-ORDER BY orders_taked DESC;
+CREATE OR REPLACE FUNCTION best_waiters(since date, until date)
+    RETURNS setof waiters AS
+$$
+BEGIN
+    RETURN QUERY
+        SELECT w.*, sum(1) AS orders_taked
+        FROM waiters w
+                 INNER JOIN orders o ON w.id = o.take_by_id
+        WHERE o.requested_on >= since
+          AND o.requested_on <= until
+        GROUP BY w.id
+        ORDER BY orders_taked DESC;
+END;
+$$ LANGUAGE plpgsql;
 
--- Cocineros que más pedidos han realizado
-SELECT k.*, sum(1) as orders_made
-FROM kitcheners k
-INNER JOIN order_details od ON k.id = od.made_by_id
-GROUP BY k.id
-ORDER BY orders_made DESC;
+CREATE OR REPLACE FUNCTION best_kitcheners(since date, until date)
+    RETURNS setof kitcheners AS
+$$
+BEGIN
+    RETURN QUERY
+        SELECT k.*, sum(1) AS orders_made
+        FROM kitcheners k
+                 INNER JOIN order_details od ON k.id = od.made_by_id
+        WHERE od.ready_on >= since
+          AND od.ready_on <= until
+        GROUP BY k.id
+        ORDER BY orders_made DESC;
+END;
+$$ LANGUAGE plpgsql;
