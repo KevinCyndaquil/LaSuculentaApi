@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import suculenta.webservice.dto.ActionResponse;
 import suculenta.webservice.model.Order;
 import suculenta.webservice.service.OrderService;
 
@@ -36,16 +37,12 @@ public class OrderController implements CrudController<Order, UUID> {
     }
 
     @PutMapping("finish")
-    public ResponseEntity<String> finish(@RequestBody List<Order.Detail> details) {
-        if (service.finish(details))
-            return ResponseEntity.ok("Finished order");
-        return ResponseEntity.badRequest().body("Assignment failed");
+    public ResponseEntity<List<ActionResponse>> finish(@RequestBody List<Order.Detail> details) {
+        return ResponseEntity.ok(service.finish(details));
     }
 
     @PutMapping("deliver")
-    public ResponseEntity<String> delivered(@RequestBody List<Order.Detail> details) {
-        if (service.deliver(details))
-            return ResponseEntity.ok("Delivered");
-        return ResponseEntity.badRequest().body("Assignment failed");
+    public ResponseEntity<List<ActionResponse>> delivered(@RequestBody List<Order.Detail> details) {
+        return ResponseEntity.ok(service.deliver(details));
     }
 }
