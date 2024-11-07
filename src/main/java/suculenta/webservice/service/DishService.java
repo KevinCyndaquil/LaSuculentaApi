@@ -4,6 +4,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import suculenta.webservice.dto.ActionResponse;
 import suculenta.webservice.model.Dish;
 import suculenta.webservice.repository.DishRepository;
 import suculenta.webservice.repository.RecipeRepository;
@@ -25,7 +26,7 @@ public class DishService implements CrudService<Dish, UUID> {
 
     @Override
     @Transactional
-    public List<Dish> save(@NonNull List<Dish> entity) {
+    public List<ActionResponse> save(@NonNull List<Dish> entity) {
         return entity.stream()
             .map(dish -> {
                 var savedDish = repository().save(dish);
@@ -43,14 +44,14 @@ public class DishService implements CrudService<Dish, UUID> {
                         .toList()
                 );
 
-                return savedDish;
+                return ActionResponse.success(savedDish);
             })
             .toList();
     }
 
     @Override
     @Transactional
-    public List<Dish> update(@NonNull List<Dish> entity) {
+    public List<ActionResponse> update(@NonNull List<Dish> entity) {
         entity.forEach(dish -> {
             dish.getRecipe().forEach(r -> r.setDish(dish));
             recipeRepository.saveAll(dish.getRecipe());
