@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.socket.TextMessage;
+import suculenta.webservice.group.OnlyRef;
 import suculenta.webservice.model.Waiter;
 import suculenta.webservice.service.WaiterService;
 
@@ -17,6 +18,7 @@ import java.util.UUID;
 @RequestMapping("waiter")
 
 @RequiredArgsConstructor
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
 public class WaiterController implements CrudController<Waiter, UUID> {
     private final WaiterService service;
 
@@ -26,9 +28,10 @@ public class WaiterController implements CrudController<Waiter, UUID> {
     }
 
     //@PostMapping("register")
-    @GetMapping("register")
-    public ResponseEntity<List<Waiter>> register(@RequestParam String id) throws IOException {
-        var session = service.getSession(id);
+    @PostMapping("login")
+    public ResponseEntity<List<Waiter>> login(@RequestBody @Validated(OnlyRef.class) Waiter waiter)
+        throws IOException {
+        var session = service.getSession(waiter.getId().toString());
         if (session != null && session.isOpen()) {
             session.sendMessage(new TextMessage("comunicación con web socket realizada"));
         }

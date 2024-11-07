@@ -1,9 +1,8 @@
 package suculenta.webservice.service;
 
 import lombok.NonNull;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.jpa.repository.JpaRepository;
+import suculenta.webservice.dto.ActionResponse;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,15 +23,17 @@ public interface CrudService<T, ID> {
             .toList();
     }
 
-    default List<T> save(@NonNull List<T> entity) {
+    default List<ActionResponse> save(@NonNull List<T> entity) {
         return entity.stream()
             .map(repository()::save)
+            .map(ActionResponse::success)
             .toList();
     }
 
-    default List<T> update(@NonNull List<T> entity) {
+    default List<ActionResponse> update(@NonNull List<T> entity) {
         return entity.stream()
             .map(repository()::save)
+            .map(ActionResponse::success)
             .toList();
     }
 

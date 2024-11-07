@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import suculenta.webservice.dto.ActionResponse;
+import suculenta.webservice.dto.SocketAction;
+import suculenta.webservice.dto.SocketResponse;
 import suculenta.webservice.model.Order;
 import suculenta.webservice.repository.OrdenDetailRepository;
 import suculenta.webservice.repository.OrderRepository;
@@ -18,6 +21,8 @@ import java.util.UUID;
 public class OrderService implements CrudService<Order, UUID> {
     private final OrderRepository repository;
     private final OrdenDetailRepository detailsRepository;
+    private final WaiterService waiterService;
+    private final KitchenerService kitchenerService;
 
     @Override
     public OrderRepository repository() {
@@ -39,29 +44,42 @@ public class OrderService implements CrudService<Order, UUID> {
             .reduce(true, Boolean::logicalAnd);
     }
 
-    public boolean finish(@NonNull List<Order.Detail> details) {
+    public List<ActionResponse> finish(@NonNull List<Order.Detail> details) {
         return details.stream()
-            .map(detail -> detailsRepository.finishOrder(
-                detail.getOrder().getId(),
-                detail.getCns(),
-                detail.getMadeBy().getId()
-            ))
-            .reduce(true, Boolean::logicalAnd);
+            .map(detail -> {
+                var result = detailsRepository.finishOrder(
+                    detail.getOrder().getId(),
+                    detail.getCns(),
+                    detail.getMadeBy().getId()
+                );
+                if (repository.isReady(detail.getOrder().getId())) {
+                    var response = SocketResponse.json(SocketAction.FINISH_ORDER, detail.getOrder());
+                    waiterService.notify(
+                        detail.getOrder().getTake_by().getId().toString(),
+                        response);
+                }
+
+                return ActionResponse.from(result, detail);
+            })
+            .toList();
     }
 
-    public boolean deliver(@NonNull List<Order.Detail> details) {
+    public List<ActionResponse> deliver(@NonNull List<Order.Detail> details) {
         return details.stream()
-            .map(detail -> detailsRepository.deliverOrder(
-                detail.getOrder().getId(),
-                detail.getCns()
-            ))
-            .reduce(true, Boolean::logicalAnd);
+            .map(detail -> {
+                var result = detailsRepository.deliverOrder(
+                    detail.getOrder().getId(),
+                    detail.getCns()
+                );
+                return ActionResponse.from(result, detail);
+            })
+            .toList();
     }
 
     @Override
     @Transactional
-    public List<Order> save(@NonNull List<Order> entity) {
-        return entity.stream()
+    public List<ActionResponse> save(@NonNull List<Order> entity) {
+        var newOrder = entity.stream()
             .map(order -> {
                 var savedOrder = repository.save(order);
 
@@ -79,14 +97,20 @@ public class OrderService implements CrudService<Order, UUID> {
                         .toList()
                 );
 
-                return savedOrder;
+                return ActionResponse.success(savedOrder);
             })
             .toList();
+
+        kitchenerService.broadcast(SocketResponse.plaintText(
+            SocketAction.NEW_ORDER,
+            "pene")
+        );
+        return newOrder;
     }
 
     @Override
     @Transactional
-    public List<Order> update(@NonNull List<Order> entity) {
+    public List<ActionResponse> update(@NonNull List<Order> entity) {
         entity.forEach(order -> {
             order.getDetails().forEach(detail -> detail.setOrder(order));
             detailsRepository.saveAll(order.getDetails());
