@@ -33,7 +33,7 @@ public class Ingredient {
     Unit unit = Unit.GRAMS;
 
     @Null(groups = Postable.class)
-    double stock;
+    double stock = 0;
 
     enum Unit {
         LITERS,

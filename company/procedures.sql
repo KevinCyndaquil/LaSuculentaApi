@@ -195,66 +195,57 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION sales_report()
+	RETURNS table (
+		ingredient_name varchar(255),
+		quantity_used   numeric(10, 2),
+		day_of_week     varchar(15),
+		date            date,
+		unit            varchar(15)
+	)
+AS
+$$
+BEGIN
+	RETURN QUERY
+		WITH recipe_table AS (SELECT i.id   AS id,
+		                             i.name AS name,
+		                             i.unit AS unit,
+		                             r.quantity
+		                      FROM dishes d
+			                           INNER JOIN recipes r ON d.id = r.dish_id
+			                           INNER JOIN ingredients i ON r.ingredient_id = i.id)
+		SELECT recipe_table.name ::varchar(255)                     AS ingredient_name,
+		       count(i.id) * recipe_table.quantity ::numeric(10, 2) AS quantity_used,
+		       to_char(od.ready_on, 'FMDay') ::varchar(15)          AS day_of_week,
+		       od.ready_on ::date                                   AS date,
+		       recipe_table.unit ::varchar(15)                      AS unit
+		FROM order_details od
+			     INNER JOIN recipes r ON od.dish_id = r.dish_id
+			     INNER JOIN ingredients i ON r.ingredient_id = i.id
+			     INNER JOIN recipe_table ON recipe_table.id = i.id
+		GROUP BY recipe_table.name,
+		         recipe_table.unit,
+		         recipe_table.quantity,
+		         od.ready_on;
+END;
+$$ LANGUAGE plpgsql;
 
-WITH ventas_por_dia  AS (SELECT d.id                             AS dish_id,
-                                to_char(o.requested_on, 'FMDay') AS day_of_week, -- Obtener el día de la semana en formato de texto
-                                count(od.order_id)               AS total_sales  -- Contar el número total de ventas para cada platillo
-                         FROM orders o
-	                              JOIN order_details od ON o.id = od.order_id -- Unir con los detalles de las órdenes
-	                              JOIN dishes d ON od.dish_id = d.id -- Unir con los platillos
-                         GROUP BY d.id, day_of_week),
-     promedio_ventas AS (SELECT dish_id,
-                                day_of_week,
-                                sum(total_sales) AS avg_sales_per_day -- Calcular el promedio de ventas por día de la semana para cada platillo
-                         FROM ventas_por_dia
-                         GROUP BY dish_id, day_of_week)
-SELECT pv.day_of_week,
-       i.name                                 AS ingredient_name,
-       sum(r.quantity * pv.avg_sales_per_day) AS total_quantity_used, -- Calcular la cantidad total de ingredientes usados
-       i.unit                                                         -- Unidad de medida del ingrediente
-FROM promedio_ventas pv
-	     JOIN public.recipes r ON pv.dish_id = r.dish_id -- Unir con las recetas para obtener los ingredientes
-	     JOIN public.ingredients i ON r.ingredient_id = i.id -- Unir con la tabla de ingredientes
-GROUP BY pv.day_of_week, i.name, i.unit -- Agrupar por día de la semana, nombre del ingrediente y unidad
-ORDER BY CASE pv.day_of_week -- Ordenar los días de la semana en el orden correcto
-	         WHEN 'Monday'
-		         THEN 1
-	         WHEN 'Tuesday'
-		         THEN 2
-	         WHEN 'Wednesday'
-		         THEN 3
-	         WHEN 'Thursday'
-		         THEN 4
-	         WHEN 'Friday'
-		         THEN 5
-	         WHEN 'Saturday'
-		         THEN 6
-	         WHEN 'Sunday'
-		         THEN 7
-	         END,
-         i.name;
+SELECT * FROM sales_report();
 
-
-WITH ventas_por_fecha AS (SELECT d.id               AS dish_id,
-                                 o.requested_on     AS order_date, -- Fecha específica de la orden
-                                 count(od.order_id) AS total_sales -- Contar el número total de ventas para cada platillo en una fecha específica
-                          FROM public.orders o
-	                               JOIN public.order_details od
-	                                    ON o.id = od.order_id -- Unir con los detalles de las órdenes
-	                               JOIN public.dishes d ON od.dish_id = d.id -- Unir con los platillos
-                          GROUP BY d.id, o.requested_on -- Agrupar por el ID del platillo y la fecha de la orden
-),
-     promedio_ventas  AS (SELECT dish_id,
-                                 order_date,
-                                 sum(total_sales) AS avg_sales_per_date -- Calcular el promedio de ventas para cada platillo en una fecha específica
-                          FROM ventas_por_fecha
-                          GROUP BY dish_id, order_date)
-SELECT pv.order_date,
-       i.name                                  AS ingredient_name,
-       sum(r.quantity * pv.avg_sales_per_date) AS total_quantity_used, -- Calcular la cantidad total de ingredientes usados
-       i.unit                                                          -- Unidad de medida del ingrediente
-FROM promedio_ventas pv
-	     JOIN public.recipes r ON pv.dish_id = r.dish_id -- Unir con las recetas para obtener los ingredientes
-	     JOIN public.ingredients i ON r.ingredient_id = i.id -- Unir con la tabla de ingredientes
-GROUP BY pv.order_date, i.name, i.unit -- Agrupar por fecha de la orden, nombre del ingrediente y unidad
-ORDER BY pv.order_date, i.name; -- Ordenar por fecha de la orden y nombre del ingrediente
+WITH recipe_table AS (SELECT i.id   AS id,
+                             i.name AS name,
+                             r.quantity
+                      FROM dishes d
+	                           INNER JOIN recipes r ON d.id = r.dish_id
+	                           INNER JOIN ingredients i ON r.ingredient_id = i.id)
+SELECT recipe_table.name                   AS ingredient_name,
+       count(i.id) * recipe_table.quantity AS quantity_used,
+       to_char(od.ready_on, 'FMDay')       AS day_of_week,
+       od.ready_on                         AS date
+FROM order_details od
+	     INNER JOIN recipes r ON od.dish_id = r.dish_id
+	     INNER JOIN ingredients i ON r.ingredient_id = i.id
+	     INNER JOIN recipe_table ON recipe_table.id = i.id
+GROUP BY recipe_table.name,
+         recipe_table.quantity,
+         od.ready_on;

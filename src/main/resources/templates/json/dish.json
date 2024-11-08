@@ -1,46 +1,368 @@
 [
   {
-    "name": "CHOCALE ABUELITA",
-    "sell_price": 89.99,
+    "name": "Pancakes",
+    "sell_price": 5.0,
+    "category": "BREAKFAST",
+    "icon": "https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/CCBC8257-1614-4027-A5F1-B3A40FC46905/Derivates/DB4155EF-4C31-4E24-8B06-419F09F2757F.jpg",
+    "recipe": [
+      {
+        "quantity": 0.3,
+        "ingredient": {
+          "id": "2480c364-92eb-48e4-85fa-26e136f1893c"
+        }
+      },
+      {
+        "quantity": 0.2,
+        "ingredient": {
+          "id": "45267cf4-b90d-4704-aeba-ad25eee248cc"
+        }
+      },
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "0f379ba4-ad4a-4bce-962a-38b858343177"
+        }
+      },
+      {
+        "quantity": 0.05,
+        "ingredient": {
+          "id": "2ae932fb-c084-4ea0-af38-d6cfa4e0905d"
+        }
+      },
+      {
+        "quantity": 0.02,
+        "ingredient": {
+          "id": "4f1e8f55-1f84-4faf-bcf1-91b0e4ba9333"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Iced Coffee",
+    "sell_price": 3.5,
+    "category": "COLD_DRINK",
+    "icon": "https://www.forkinthekitchen.com/wp-content/uploads/2022/08/220629.iced_.latte_.vanilla-9009-600x600.jpg",
     "recipe": [
       {
         "quantity": 0.2,
         "ingredient": {
-          "id": "8bfa7f82-e077-4b07-88be-937f96bcef1a"
+          "id": "1005190e-f720-4c33-838e-219e58af9819"
         }
       },
       {
-        "quantity": 0.5,
+        "quantity": 0.3,
         "ingredient": {
-          "id": "69601920-eb63-42de-970c-7c93d7455d46"
+          "id": "45267cf4-b90d-4704-aeba-ad25eee248cc"
         }
       },
-      {
-        "quantity": 5,
-        "ingredient": {
-          "id": "c59690b2-0674-4a4b-b460-323a88f25289"
-        }
-      }
-    ],
-    "category": "WARM_DRINK"
-  },
-  {
-    "name": "CAFE AMERICANO",
-    "sell_price": 60.99,
-    "recipe": [
       {
         "quantity": 0.1,
         "ingredient": {
-          "id": "b96e9ba3-b0ee-4974-a42b-756076709c6d"
+          "id": "2ae932fb-c084-4ea0-af38-d6cfa4e0905d"
         }
       },
       {
-        "quantity": 0.5,
+        "quantity": 0.4,
         "ingredient": {
-          "id": "c3932d24-2cb0-47dd-b0c5-b30ee828b6f5"
+          "id": "96e664b2-ca6d-4eae-b021-642fc5ae532c"
         }
       }
-    ],
-    "category": "WARM_DRINK"
+    ]
+  },
+  {
+    "name": "Hot Chocolate",
+    "sell_price": 2.5,
+    "category": "WARM_DRINK",
+    "icon": "https://www.allrecipes.com/thmb/lnb_004MI6wGuJXQ-uDxMUNZmQk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/20211-creamy-hot-cocoa-DDMFS-4x3-ed6183b2bbb74bbba4a06a78e4d72350.jpg",
+    "recipe": [
+      {
+        "quantity": 0.3,
+        "ingredient": {
+          "id": "3098330b-157f-4cb2-a7b7-7ddef5637365"
+        }
+      },
+      {
+        "quantity": 0.2,
+        "ingredient": {
+          "id": "45267cf4-b90d-4704-aeba-ad25eee248cc"
+        }
+      },
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "2ae932fb-c084-4ea0-af38-d6cfa4e0905d"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Chocolate Cake",
+    "sell_price": 4.75,
+    "category": "DESSERT",
+    "icon": "https://bonnibakery.com/wp-content/uploads/2021/01/ChocolateCake-2-scaled.jpg",
+    "recipe": [
+      {
+        "quantity": 0.4,
+        "ingredient": {
+          "id": "2480c364-92eb-48e4-85fa-26e136f1893c"
+        }
+      },
+      {
+        "quantity": 0.3,
+        "ingredient": {
+          "id": "2ae932fb-c084-4ea0-af38-d6cfa4e0905d"
+        }
+      },
+      {
+        "quantity": 0.3,
+        "ingredient": {
+          "id": "3098330b-157f-4cb2-a7b7-7ddef5637365"
+        }
+      },
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "4f1e8f55-1f84-4faf-bcf1-91b0e4ba9333"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Omelette",
+    "sell_price": 4.5,
+    "category": "BREAKFAST",
+    "icon": "https://storage.googleapis.com/avena-recipes/agtzfmF2ZW5hLWJvdHIZCxIMSW50ZXJjb21Vc2VyGICAgICa8YQKDA/06-04-2024/wcA7GGJKKe8Au1Q204Jv1712443380458.jpeg",
+    "recipe": [
+      {
+        "quantity": 0.2,
+        "ingredient": {
+          "id": "0f379ba4-ad4a-4bce-962a-38b858343177"
+        }
+      },
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "45267cf4-b90d-4704-aeba-ad25eee248cc"
+        }
+      },
+      {
+        "quantity": 0.05,
+        "ingredient": {
+          "id": "4f1e8f55-1f84-4faf-bcf1-91b0e4ba9333"
+        }
+      },
+      {
+        "quantity": 0.02,
+        "ingredient": {
+          "id": "0d4c5416-ec5d-4a18-b002-55d5affb2507"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Orange Juice",
+    "sell_price": 2.0,
+    "category": "COLD_DRINK",
+    "icon": "https://elisetriestocook.com/wp-content/uploads/2023/10/freshly-squeezed-orange-juice-featured-image-500x500.jpg",
+    "recipe": [
+      {
+        "quantity": 0.25,
+        "ingredient": {
+          "id": "1ce34f33-ec61-4676-a5ab-ffa6c849fa26"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Espresso",
+    "sell_price": 2.75,
+    "category": "WARM_DRINK",
+    "icon": "https://www.thespruceeats.com/thmb/HJrjMfXdLGHbgMhnM0fMkDx9XPQ=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/what-is-espresso-765702-hero-03_cropped-ffbc0c7cf45a46ff846843040c8f370c.jpg",
+    "recipe": [
+      {
+        "quantity": 0.2,
+        "ingredient": {
+          "id": "1005190e-f720-4c33-838e-219e58af9819"
+        }
+      },
+      {
+        "quantity": 0.05,
+        "ingredient": {
+          "id": "96e664b2-ca6d-4eae-b021-642fc5ae532c"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Cheesecake",
+    "sell_price": 5.0,
+    "category": "DESSERT",
+    "icon": "https://assets.tmecosys.com/image/upload/t_web767x639/img/recipe/ras/Assets/B4908103-C61E-4BCC-9609-03919F55CE7E/Derivates/60B07F46-E017-4FDD-A6A9-BDA7A09C6240.jpg",
+    "recipe": [
+      {
+        "quantity": 0.5,
+        "ingredient": {
+          "id": "1edb4dfc-9472-4878-8316-834ff1d3f1db"
+        }
+      },
+      {
+        "quantity": 0.2,
+        "ingredient": {
+          "id": "2ae932fb-c084-4ea0-af38-d6cfa4e0905d"
+        }
+      },
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "0f379ba4-ad4a-4bce-962a-38b858343177"
+        }
+      },
+      {
+        "quantity": 0.05,
+        "ingredient": {
+          "id": "f634e9b3-e3fd-4bd4-9b4b-427aca923321"
+        }
+      }
+    ]
+  },
+  {
+    "name": "French Toast",
+    "sell_price": 5.5,
+    "category": "BREAKFAST",
+    "icon": "https://www.allrecipes.com/thmb/m7LSrMCa5TX0ZAO0lP1ias9phyo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/7016-french-toast-i-ddmfs-beauty-4x3-b77fcd549a18443da3cf488687eae64f.jpg",
+    "recipe": [
+      {
+        "quantity": 0.3,
+        "ingredient": {
+          "id": "6cf40d9c-62f2-4866-8e92-a6304a28e34d"
+        }
+      },
+      {
+        "quantity": 0.2,
+        "ingredient": {
+          "id": "45267cf4-b90d-4704-aeba-ad25eee248cc"
+        }
+      },
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "0f379ba4-ad4a-4bce-962a-38b858343177"
+        }
+      },
+      {
+        "quantity": 0.05,
+        "ingredient": {
+          "id": "2ae932fb-c084-4ea0-af38-d6cfa4e0905d"
+        }
+      },
+      {
+        "quantity": 0.02,
+        "ingredient": {
+          "id": "50b38adf-0f1f-4e54-9ebb-0718b3c92d86"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Lemonade",
+    "sell_price": 2.25,
+    "category": "COLD_DRINK",
+    "icon": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4Oe0cfizikfWR-AscJvvxLF6yzne56XiiWQ&s",
+    "recipe": [
+      {
+        "quantity": 0.3,
+        "ingredient": {
+          "id": "76540a55-3379-4ee9-99f5-34d626382c90"
+        }
+      },
+      {
+        "quantity": 0.7,
+        "ingredient": {
+          "id": "96e664b2-ca6d-4eae-b021-642fc5ae532c"
+        }
+      },
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "2ae932fb-c084-4ea0-af38-d6cfa4e0905d"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Apple Pie",
+    "sell_price": 4.25,
+    "category": "DESSERT",
+    "icon": "https://www.southernliving.com/thmb/bbDY1d_ySIrCFcq8WNBkR-3x6pU=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/2589601_Mailb_Mailbox_Apple_Pie_003-da802ff7a8984b2fa9aa0535997ab246.jpg",
+    "recipe": [
+      {
+        "quantity": 0.3,
+        "ingredient": {
+          "id": "0ae4107e-f681-4828-80bf-99ee44e6ee0b"
+        }
+      },
+      {
+        "quantity": 0.2,
+        "ingredient": {
+          "id": "2480c364-92eb-48e4-85fa-26e136f1893c"
+        }
+      },
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "2ae932fb-c084-4ea0-af38-d6cfa4e0905d"
+        }
+      },
+      {
+        "quantity": 0.05,
+        "ingredient": {
+          "id": "4f1e8f55-1f84-4faf-bcf1-91b0e4ba9333"
+        }
+      },
+      {
+        "quantity": 0.02,
+        "ingredient": {
+          "id": "50b38adf-0f1f-4e54-9ebb-0718b3c92d86"
+        }
+      }
+    ]
+  },
+  {
+    "name": "Cinnamon Roll",
+    "sell_price": 4.00,
+    "category": "DESSERT",
+    "icon": "https://butternutbakeryblog.com/wp-content/uploads/2023/01/gluten-free-cinnamon-roll.jpg",
+    "recipe": [
+      {
+        "quantity": 0.2,
+        "ingredient": {
+          "id": "2480c364-92eb-48e4-85fa-26e136f1893c"
+        }
+      },
+      {
+        "quantity": 0.05,
+        "ingredient": {
+          "id": "50b38adf-0f1f-4e54-9ebb-0718b3c92d86"
+        }
+      },
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "2ae932fb-c084-4ea0-af38-d6cfa4e0905d"
+        }
+      },
+      {
+        "quantity": 0.05,
+        "ingredient": {
+          "id": "4f1e8f55-1f84-4faf-bcf1-91b0e4ba9333"
+        }
+      },
+      {
+        "quantity": 0.1,
+        "ingredient": {
+          "id": "0f379ba4-ad4a-4bce-962a-38b858343177"
+        }
+      }
+    ]
   }
 ]

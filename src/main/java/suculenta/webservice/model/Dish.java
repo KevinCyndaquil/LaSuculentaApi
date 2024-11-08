@@ -43,6 +43,7 @@ public class Dish {
     Category category;
 
     @NotNull(groups = Postable.class)
+    @Column(columnDefinition = "TEXT")
     String icon;
 
     @Data
