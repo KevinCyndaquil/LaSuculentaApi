@@ -43,7 +43,7 @@ public class Dish {
     Category category;
 
     @NotNull(groups = Postable.class)
-    byte[] icon;
+    String icon;
 
     @Data
     @NoArgsConstructor

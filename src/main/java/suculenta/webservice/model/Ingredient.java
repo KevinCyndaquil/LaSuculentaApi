@@ -33,7 +33,6 @@ public class Ingredient {
     Unit unit = Unit.GRAMS;
 
     @Null(groups = Postable.class)
-    @Min(value = 0)
     double stock;
 
     enum Unit {
