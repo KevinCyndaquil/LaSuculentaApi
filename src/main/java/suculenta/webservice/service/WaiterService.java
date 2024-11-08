@@ -1,6 +1,5 @@
 package suculenta.webservice.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import suculenta.webservice.model.Waiter;

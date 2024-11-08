@@ -194,3 +194,67 @@ BEGIN
 		ORDER BY orders_made DESC;
 END;
 $$ LANGUAGE plpgsql;
+
+
+WITH ventas_por_dia  AS (SELECT d.id                             AS dish_id,
+                                to_char(o.requested_on, 'FMDay') AS day_of_week, -- Obtener el día de la semana en formato de texto
+                                count(od.order_id)               AS total_sales  -- Contar el número total de ventas para cada platillo
+                         FROM orders o
+	                              JOIN order_details od ON o.id = od.order_id -- Unir con los detalles de las órdenes
+	                              JOIN dishes d ON od.dish_id = d.id -- Unir con los platillos
+                         GROUP BY d.id, day_of_week),
+     promedio_ventas AS (SELECT dish_id,
+                                day_of_week,
+                                sum(total_sales) AS avg_sales_per_day -- Calcular el promedio de ventas por día de la semana para cada platillo
+                         FROM ventas_por_dia
+                         GROUP BY dish_id, day_of_week)
+SELECT pv.day_of_week,
+       i.name                                 AS ingredient_name,
+       sum(r.quantity * pv.avg_sales_per_day) AS total_quantity_used, -- Calcular la cantidad total de ingredientes usados
+       i.unit                                                         -- Unidad de medida del ingrediente
+FROM promedio_ventas pv
+	     JOIN public.recipes r ON pv.dish_id = r.dish_id -- Unir con las recetas para obtener los ingredientes
+	     JOIN public.ingredients i ON r.ingredient_id = i.id -- Unir con la tabla de ingredientes
+GROUP BY pv.day_of_week, i.name, i.unit -- Agrupar por día de la semana, nombre del ingrediente y unidad
+ORDER BY CASE pv.day_of_week -- Ordenar los días de la semana en el orden correcto
+	         WHEN 'Monday'
+		         THEN 1
+	         WHEN 'Tuesday'
+		         THEN 2
+	         WHEN 'Wednesday'
+		         THEN 3
+	         WHEN 'Thursday'
+		         THEN 4
+	         WHEN 'Friday'
+		         THEN 5
+	         WHEN 'Saturday'
+		         THEN 6
+	         WHEN 'Sunday'
+		         THEN 7
+	         END,
+         i.name;
+
+
+WITH ventas_por_fecha AS (SELECT d.id               AS dish_id,
+                                 o.requested_on     AS order_date, -- Fecha específica de la orden
+                                 count(od.order_id) AS total_sales -- Contar el número total de ventas para cada platillo en una fecha específica
+                          FROM public.orders o
+	                               JOIN public.order_details od
+	                                    ON o.id = od.order_id -- Unir con los detalles de las órdenes
+	                               JOIN public.dishes d ON od.dish_id = d.id -- Unir con los platillos
+                          GROUP BY d.id, o.requested_on -- Agrupar por el ID del platillo y la fecha de la orden
+),
+     promedio_ventas  AS (SELECT dish_id,
+                                 order_date,
+                                 sum(total_sales) AS avg_sales_per_date -- Calcular el promedio de ventas para cada platillo en una fecha específica
+                          FROM ventas_por_fecha
+                          GROUP BY dish_id, order_date)
+SELECT pv.order_date,
+       i.name                                  AS ingredient_name,
+       sum(r.quantity * pv.avg_sales_per_date) AS total_quantity_used, -- Calcular la cantidad total de ingredientes usados
+       i.unit                                                          -- Unidad de medida del ingrediente
+FROM promedio_ventas pv
+	     JOIN public.recipes r ON pv.dish_id = r.dish_id -- Unir con las recetas para obtener los ingredientes
+	     JOIN public.ingredients i ON r.ingredient_id = i.id -- Unir con la tabla de ingredientes
+GROUP BY pv.order_date, i.name, i.unit -- Agrupar por fecha de la orden, nombre del ingrediente y unidad
+ORDER BY pv.order_date, i.name; -- Ordenar por fecha de la orden y nombre del ingrediente
