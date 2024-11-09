@@ -1,6 +1,8 @@
 package suculenta.webservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -44,5 +46,10 @@ public class OrderController implements CrudController<Order, UUID> {
     @PutMapping("deliver")
     public ResponseEntity<List<ActionResponse>> delivered(@RequestBody List<Order.Detail> details) {
         return ResponseEntity.ok(service.deliver(details));
+    }
+
+    @GetMapping("pages")
+    public ResponseEntity<Page<Order>> select(Pageable pageable) {
+        return ResponseEntity.ok(service().select(pageable));
     }
 }

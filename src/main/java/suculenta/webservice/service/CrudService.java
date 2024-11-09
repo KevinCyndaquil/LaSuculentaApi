@@ -1,6 +1,8 @@
 package suculenta.webservice.service;
 
 import lombok.NonNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import suculenta.webservice.dto.ActionResponse;
 
@@ -21,6 +23,10 @@ public interface CrudService<T, ID> {
             .filter(Optional::isPresent)
             .map(Optional::get)
             .toList();
+    }
+
+    default Page<T> select(Pageable pageable) {
+        return repository().findAll(pageable);
     }
 
     default List<ActionResponse> save(@NonNull List<T> entity) {

@@ -2,6 +2,8 @@ package suculenta.webservice.service;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +44,11 @@ public class OrderService implements CrudService<Order, UUID> {
                 detail.getMadeBy().getId()
             ))
             .reduce(true, Boolean::logicalAnd);
+    }
+
+    @Override
+    public Page<Order> select(Pageable pageable) {
+        return repository().selectAll(pageable);
     }
 
     public List<ActionResponse> finish(@NonNull List<Order.Detail> details) {

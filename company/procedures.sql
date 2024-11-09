@@ -249,3 +249,14 @@ FROM order_details od
 GROUP BY recipe_table.name,
          recipe_table.quantity,
          od.ready_on;
+
+
+SELECT o.table_number,
+       od.current_process,
+       o.client_name,
+       od.dish_id
+FROM orders o
+	     INNER JOIN order_details od ON o.id = od.order_id
+WHERE od.current_process = 'WAITING_KITCHENER'
+   OR od.current_process = 'GETTING_READY'
+   OR od.current_process = 'READY_TO_DELIVER';

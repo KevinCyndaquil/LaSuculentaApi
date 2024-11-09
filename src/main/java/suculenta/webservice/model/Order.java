@@ -29,6 +29,7 @@ public class Order {
     UUID id;
 
     @Min(value = 1, groups = Postable.class)
+    @Max(value = 10, groups = Postable.class)
     int table_number;
 
     @Pattern(regexp = "^[A-Z]{2,}( [A-Z]{2,}){0,3}$", groups = Postable.class)
