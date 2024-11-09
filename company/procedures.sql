@@ -250,13 +250,29 @@ GROUP BY recipe_table.name,
          recipe_table.quantity,
          od.ready_on;
 
+CREATE OR REPLACE FUNCTION taken_tables()
+	RETURNS table (
+		table_number int,
+		current_process varchar,
+		client_name varchar,
+		dish_id uuid
+	)
+AS
+$$
+BEGIN
+	RETURN QUERY
+		SELECT o.table_number::int,
+		       od.current_process::varchar,
+		       o.client_name::varchar,
+		       od.dish_id::uuid
+		FROM orders o
+			     INNER JOIN order_details od ON o.id = od.order_id
+		WHERE od.current_process = 'WAITING_KITCHENER'
+		   OR od.current_process = 'GETTING_READY'
+		   OR od.current_process = 'READY_TO_DELIVER';
+END;
+$$
+	LANGUAGE plpgsql;
 
-SELECT o.table_number,
-       od.current_process,
-       o.client_name,
-       od.dish_id
-FROM orders o
-	     INNER JOIN order_details od ON o.id = od.order_id
-WHERE od.current_process = 'WAITING_KITCHENER'
-   OR od.current_process = 'GETTING_READY'
-   OR od.current_process = 'READY_TO_DELIVER';
+SELECT * FROM taken_tables();
+
