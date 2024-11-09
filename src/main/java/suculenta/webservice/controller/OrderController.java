@@ -10,6 +10,7 @@ import suculenta.webservice.dto.ActionResponse;
 import suculenta.webservice.model.Order;
 import suculenta.webservice.service.OrderService;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,8 +28,8 @@ public class OrderController implements CrudController<Order, UUID> {
     }
 
     @GetMapping("to-made")
-    public ResponseEntity<List<Order.Detail>> toMade() {
-        return ResponseEntity.ok(service.ordersToMade());
+    public ResponseEntity<Page<Order.Detail>> toMade(Pageable pageable) {
+        return ResponseEntity.ok(service.ordersToMade(pageable));
     }
 
     @PutMapping("assign")
@@ -49,5 +50,13 @@ public class OrderController implements CrudController<Order, UUID> {
     @GetMapping("pages")
     public ResponseEntity<Page<Order>> select(Pageable pageable) {
         return ResponseEntity.ok(service().select(pageable));
+    }
+
+    @GetMapping("sold")
+    public ResponseEntity<Page<Order>> sold(
+        @RequestParam("since") Date since,
+        @RequestParam("until") Date until,
+        Pageable pageable) {
+        return ResponseEntity.ok(service().selectSold(since, until, pageable));
     }
 }

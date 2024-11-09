@@ -1,7 +1,6 @@
 package suculenta.webservice.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -20,6 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 
 @Entity(name = "dishes")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -71,6 +71,11 @@ public class Dish {
         @ManyToOne
         @NotNull(groups = Postable.class)
         Ingredient ingredient;
+
+        @JsonProperty("dish_id")
+        public UUID getDishId() {
+            return dish == null ? null : dish.getId();
+        }
 
         @Data
         @NoArgsConstructor

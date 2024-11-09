@@ -3,6 +3,7 @@ package suculenta.webservice.service;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -14,6 +15,7 @@ import suculenta.webservice.model.Order;
 import suculenta.webservice.repository.OrdenDetailRepository;
 import suculenta.webservice.repository.OrderRepository;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,13 +33,24 @@ public class OrderService implements CrudService<Order, UUID> {
         return repository;
     }
 
-    public List<Order.Detail> ordersToMade() {
-        return detailsRepository.findByMadeByIsNull();
+    public Page<Order.Detail> ordersToMade(Pageable pageable) {
+        return detailsRepository.findByMadeByIsNull(pageable);
     }
 
     @Override
     public Page<Order> select(Pageable pageable) {
         return repository().selectAll(pageable);
+    }
+
+    public Page<Order> selectSold(Date since, Date until, @NonNull Pageable pageable) {
+        return new PageImpl<>(
+            repository.soldOrders(
+                since,
+                until,
+                pageable.getOffset(),
+                pageable.getPageSize()),
+            pageable,
+            repository.count());
     }
 
     @Transactional(isolation = Isolation.SERIALIZABLE)

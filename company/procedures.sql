@@ -157,7 +157,7 @@ BEGIN
 		WHERE o.requested_on >= since
 		  AND o.requested_on <= until
 		  AND od.current_process = 'FINISHED'
-		GROUP BY o.id;
+		ORDER BY o.requested_on DESC;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -230,10 +230,10 @@ SELECT * FROM sales_report();
 
 CREATE OR REPLACE FUNCTION taken_tables()
 	RETURNS table (
-		table_number int,
+		table_number    int,
 		current_process varchar,
-		client_name varchar,
-		dish_id uuid
+		client_name     varchar,
+		dish_id         uuid
 	)
 AS
 $$
