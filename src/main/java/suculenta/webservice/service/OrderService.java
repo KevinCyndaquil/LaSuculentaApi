@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import suculenta.webservice.dto.ActionResponse;
 import suculenta.webservice.dto.SocketAction;
 import suculenta.webservice.dto.SocketResponse;
+import suculenta.webservice.model.Kitchener;
 import suculenta.webservice.model.Order;
 import suculenta.webservice.repository.OrdenDetailRepository;
 import suculenta.webservice.repository.OrderRepository;
@@ -40,6 +41,13 @@ public class OrderService implements CrudService<Order, UUID> {
     @Override
     public Page<Order> select(Pageable pageable) {
         return repository().selectAll(pageable);
+    }
+
+    public Page<Order.Detail> select(
+        Order.Process process,
+        @NonNull Kitchener kitchener,
+        Pageable pageable) {
+        return detailsRepository.findByCurrentProcessAndMadeBy(process, kitchener, pageable);
     }
 
     public Page<Order> selectSold(Date since, Date until, @NonNull Pageable pageable) {

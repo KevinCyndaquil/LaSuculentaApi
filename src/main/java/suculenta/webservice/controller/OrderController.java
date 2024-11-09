@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import suculenta.webservice.dto.ActionResponse;
+import suculenta.webservice.dto.KitchenerOrder;
 import suculenta.webservice.model.Order;
 import suculenta.webservice.service.OrderService;
 
@@ -25,6 +26,16 @@ public class OrderController implements CrudController<Order, UUID> {
     @Override
     public OrderService service() {
         return service;
+    }
+
+    @PostMapping("filter")
+    public ResponseEntity<Page<Order.Detail>> filter(
+        @RequestBody KitchenerOrder filterRequest,
+        Pageable pageable) {
+        return ResponseEntity.ok(service.select(
+            filterRequest.process(),
+            filterRequest.kitchener(),
+            pageable));
     }
 
     @GetMapping("to-made")

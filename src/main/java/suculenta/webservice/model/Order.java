@@ -71,7 +71,8 @@ public class Order {
 
         @Null(groups = Postable.class)
         @Enumerated(EnumType.STRING)
-        Process current_process = Process.WAITING_KITCHENER;
+        @Column(name = "current_process")
+        Process currentProcess = Process.WAITING_KITCHENER;
 
         @ManyToOne
         @Null(groups = Postable.class)
