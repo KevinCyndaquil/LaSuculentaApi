@@ -146,8 +146,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
---SELECT * FROM sell_dishes_table();
-
 CREATE OR REPLACE FUNCTION sold_orders(since date, until date)
 	RETURNS setof orders AS
 $$
@@ -162,8 +160,6 @@ BEGIN
 		GROUP BY o.id;
 END;
 $$ LANGUAGE plpgsql;
-
---SELECT * FROM sold_orders('2024-01-01', '2024-12-31');
 
 CREATE OR REPLACE FUNCTION best_waiters(since date, until date)
 	RETURNS setof waiters AS
@@ -231,24 +227,6 @@ END;
 $$ LANGUAGE plpgsql;
 
 SELECT * FROM sales_report();
-
-WITH recipe_table AS (SELECT i.id   AS id,
-                             i.name AS name,
-                             r.quantity
-                      FROM dishes d
-	                           INNER JOIN recipes r ON d.id = r.dish_id
-	                           INNER JOIN ingredients i ON r.ingredient_id = i.id)
-SELECT recipe_table.name                   AS ingredient_name,
-       count(i.id) * recipe_table.quantity AS quantity_used,
-       to_char(od.ready_on, 'FMDay')       AS day_of_week,
-       od.ready_on                         AS date
-FROM order_details od
-	     INNER JOIN recipes r ON od.dish_id = r.dish_id
-	     INNER JOIN ingredients i ON r.ingredient_id = i.id
-	     INNER JOIN recipe_table ON recipe_table.id = i.id
-GROUP BY recipe_table.name,
-         recipe_table.quantity,
-         od.ready_on;
 
 CREATE OR REPLACE FUNCTION taken_tables()
 	RETURNS table (

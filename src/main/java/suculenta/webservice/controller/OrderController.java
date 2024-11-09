@@ -32,10 +32,8 @@ public class OrderController implements CrudController<Order, UUID> {
     }
 
     @PutMapping("assign")
-    public ResponseEntity<String> assign(@RequestBody List<Order.Detail> details) {
-        if (service.assign(details))
-            return ResponseEntity.ok("Assigned");
-        return ResponseEntity.badRequest().body("Assignment failed");
+    public ResponseEntity<List<ActionResponse>> assign(@RequestBody List<Order.Detail> details) {
+        return ResponseEntity.ok(service.assign(details));
     }
 
     @PutMapping("finish")

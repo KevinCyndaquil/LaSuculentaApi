@@ -35,20 +35,23 @@ public class OrderService implements CrudService<Order, UUID> {
         return detailsRepository.findByMadeByIsNull();
     }
 
-    @Transactional(isolation = Isolation.SERIALIZABLE)
-    public boolean assign(@NonNull List<Order.Detail> details) {
-        return details.stream()
-            .map(detail -> detailsRepository.assignOrder(
-                detail.getOrder().getId(),
-                detail.getCns(),
-                detail.getMadeBy().getId()
-            ))
-            .reduce(true, Boolean::logicalAnd);
-    }
-
     @Override
     public Page<Order> select(Pageable pageable) {
         return repository().selectAll(pageable);
+    }
+
+    @Transactional(isolation = Isolation.SERIALIZABLE)
+    public List<ActionResponse> assign(@NonNull List<Order.Detail> details) {
+        return details.stream()
+            .map(detail -> {
+                var result = detailsRepository.assignOrder(
+                    detail.getOrder().getId(),
+                    detail.getCns(),
+                    detail.getMadeBy().getId()
+                );
+                return ActionResponse.from(result, detail);
+            })
+            .toList();
     }
 
     public List<ActionResponse> finish(@NonNull List<Order.Detail> details) {
