@@ -19,6 +19,7 @@ public interface WebSocketService {
     }
 
     default WebSocketSession getSession(@NonNull String id) {
+        System.out.println(sessions);
         return sessions.get(id);
     }
 
