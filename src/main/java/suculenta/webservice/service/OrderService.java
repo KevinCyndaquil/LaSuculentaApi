@@ -81,7 +81,8 @@ public class OrderService implements CrudService<Order, UUID> {
                     detail.getCns(),
                     detail.getMadeBy().getId()
                 );
-                entityManager.refresh(detail);
+                if (entityManager.contains(detail))
+                    entityManager.refresh(detail);
 
                 var upDetail = detailsRepository.findById(detail.getId())
                     .orElseThrow(() -> new RuntimeException("Order not found"));
@@ -103,7 +104,9 @@ public class OrderService implements CrudService<Order, UUID> {
                     detail.getCns(),
                     detail.getMadeBy().getId()
                 );
-                entityManager.refresh(detail);
+                if (entityManager.contains(detail))
+                    entityManager.refresh(detail);
+
                 var upDetail = detailsRepository.findById(detail.getId())
                     .orElseThrow(() -> new RuntimeException("Order not found"));
 
@@ -129,7 +132,9 @@ public class OrderService implements CrudService<Order, UUID> {
                     detail.getOrder().getId(),
                     detail.getCns()
                 );
-                entityManager.refresh(detail);
+                if (entityManager.contains(detail))
+                    entityManager.refresh(detail);
+
                 var upDetail = detailsRepository.findById(detail.getId())
                     .orElseThrow(() -> new RuntimeException("Order not found"));
 
