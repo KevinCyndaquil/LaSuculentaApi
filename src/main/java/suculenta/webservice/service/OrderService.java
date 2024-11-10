@@ -85,8 +85,10 @@ public class OrderService implements CrudService<Order, UUID> {
                 );
                 if (repository.isReady(detail.getOrder().getId())) {
                     var response = SocketResponse.json(SocketAction.FINISH_ORDER, detail.getOrder());
+                    var order = repository().findById(detail.getOrder().getId())
+                        .orElseThrow(() -> new NullPointerException("Error"));
                     waiterService.notify(
-                        detail.getOrder().getTake_by().getId().toString(),
+                        order.getTake_by().getId().toString(),
                         response);
                 }
 
