@@ -1,7 +1,6 @@
 package suculenta.webservice.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
@@ -35,7 +34,7 @@ public class Ingredient {
     @Null(groups = Postable.class)
     double stock = 0;
 
-    enum Unit {
+    public enum Unit {
         LITERS,
         MILLILITERS,
         KILOS,
