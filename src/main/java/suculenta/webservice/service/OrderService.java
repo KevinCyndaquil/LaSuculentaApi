@@ -1,5 +1,6 @@
 package suculenta.webservice.service;
 
+import jakarta.persistence.EntityManager;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,7 @@ public class OrderService implements CrudService<Order, UUID> {
     private final OrdenDetailRepository detailsRepository;
     private final WaiterService waiterService;
     private final KitchenerService kitchenerService;
+    private final EntityManager entityManager;
 
     @Override
     public OrderRepository repository() {
@@ -78,7 +80,15 @@ public class OrderService implements CrudService<Order, UUID> {
                     detail.getCns(),
                     detail.getMadeBy().getId()
                 );
-                return Response.from(result, detail);
+                entityManager.refresh(detail);
+
+                var upDetail = detailsRepository.findById(detail.getId())
+                    .orElseThrow(() -> new RuntimeException("Order not found"));
+                System.out.println("Order " + detail.getOrder().getId() + " cns " + upDetail.getCns());
+                System.out.println(upDetail.getMadeBy());
+                System.out.println("Current Process " + upDetail.getCurrentProcess());
+                System.out.println("Current success " + result);
+                return Response.from(result, upDetail);
             })
             .toList();
     }
@@ -92,6 +102,10 @@ public class OrderService implements CrudService<Order, UUID> {
                     detail.getCns(),
                     detail.getMadeBy().getId()
                 );
+                entityManager.refresh(detail);
+                var upDetail = detailsRepository.findById(detail.getId())
+                    .orElseThrow(() -> new RuntimeException("Order not found"));
+
                 if (repository.isReady(detail.getOrder().getId())) {
                     var order = repository().findById(detail.getOrder().getId())
                         .orElseThrow(() -> new NullPointerException("Error"));
@@ -102,7 +116,7 @@ public class OrderService implements CrudService<Order, UUID> {
                         response);
                 }
 
-                return Response.from(result, detail);
+                return Response.from(result, upDetail);
             })
             .toList();
     }
@@ -114,7 +128,11 @@ public class OrderService implements CrudService<Order, UUID> {
                     detail.getOrder().getId(),
                     detail.getCns()
                 );
-                return Response.from(result, detail);
+                entityManager.refresh(detail);
+                var upDetail = detailsRepository.findById(detail.getId())
+                    .orElseThrow(() -> new RuntimeException("Order not found"));
+
+                return Response.from(result, upDetail);
             })
             .toList();
     }

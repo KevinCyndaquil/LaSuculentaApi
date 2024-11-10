@@ -11,6 +11,7 @@ BEGIN
 	FROM order_details od
 	WHERE od.order_id = assign_order.order_id
 	  AND cns = dish
+	  AND current_process = 'WAITING_KITCHENER'
 		FOR UPDATE;
 
 	UPDATE order_details od
@@ -22,9 +23,7 @@ BEGIN
 
 	RETURN FOUND;
 END;
-$$
-	LANGUAGE plpgsql;
-
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION finish_order(order_id uuid, dish int, kitchener_id uuid)
 	RETURNS boolean AS
@@ -193,6 +192,7 @@ $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION sales_report()
 	RETURNS table (
+		ingredient_id   uuid,
 		ingredient_name varchar(255),
 		quantity_used   numeric(10, 2),
 		day_of_week     varchar(15),
@@ -210,7 +210,8 @@ BEGIN
 		                      FROM dishes d
 			                           INNER JOIN recipes r ON d.id = r.dish_id
 			                           INNER JOIN ingredients i ON r.ingredient_id = i.id)
-		SELECT recipe_table.name ::varchar(255)                     AS ingredient_name,
+		SELECT recipe_table.id::uuid                                AS ingredient_id,
+		       recipe_table.name ::varchar(255)                     AS ingredient_name,
 		       count(i.id) * recipe_table.quantity ::numeric(10, 2) AS quantity_used,
 		       to_char(od.ready_on, 'FMDay') ::varchar(15)          AS day_of_week,
 		       od.ready_on ::date                                   AS date,
@@ -219,7 +220,8 @@ BEGIN
 			     INNER JOIN recipes r ON od.dish_id = r.dish_id
 			     INNER JOIN ingredients i ON r.ingredient_id = i.id
 			     INNER JOIN recipe_table ON recipe_table.id = i.id
-		GROUP BY recipe_table.name,
+		GROUP BY recipe_table.id,
+		         recipe_table.name,
 		         recipe_table.unit,
 		         recipe_table.quantity,
 		         od.ready_on;
@@ -254,16 +256,16 @@ $$
 
 SELECT * FROM taken_tables();
 
-SELECT * FROM order_details WHERE  current_process = 'WAITING_KITCHENER';
+SELECT * FROM order_details WHERE current_process = 'WAITING_KITCHENER';
 
 SELECT od.ready_on, od.current_process, o.client_name, di.name, k.name, w.name
 FROM orders o
 	     INNER JOIN order_details od ON o.id = od.order_id
 	     INNER JOIN dishes di ON od.dish_id = di.id
-	     INNER JOIN  kitcheners k ON od.made_by_id = k.id
-	     INNER JOIN  waiters w ON o.take_by_id = w.id
+	     INNER JOIN kitcheners k ON od.made_by_id = k.id
+	     INNER JOIN waiters w ON o.take_by_id = w.id
 WHERE od.current_process = 'WAITING_KITCHENER'
    OR od.current_process = 'GETTING_READY'
    OR od.current_process = 'READY_TO_DELIVER'
-   ORDER BY o.id;
+ORDER BY o.id;
 

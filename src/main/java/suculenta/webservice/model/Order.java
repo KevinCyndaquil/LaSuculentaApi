@@ -20,7 +20,6 @@ import java.util.UUID;
 @AllArgsConstructor
 
 @Entity(name = "orders")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,6 +35,7 @@ public class Order {
     String client_name;
 
     @Null(groups = Postable.class)
+    @Builder.Default
     Date requested_on = new Date(System.currentTimeMillis());
 
     @ManyToOne
@@ -70,6 +70,7 @@ public class Order {
         Date ready_on;
 
         @Null(groups = Postable.class)
+        @Builder.Default
         @Enumerated(EnumType.STRING)
         @Column(name = "current_process")
         Process currentProcess = Process.WAITING_KITCHENER;
@@ -79,13 +80,18 @@ public class Order {
         @JoinColumn(name = "made_by_id")
         Kitchener madeBy;
 
-        @ManyToOne
+        @ManyToOne(fetch = FetchType.LAZY)
         @NotNull(groups = Postable.class)
         Dish dish;
 
         @JsonProperty("order_id")
         public UUID getOrderId() {
             return order == null ? null : order.getId();
+        }
+
+        @JsonIgnore
+        public ID getId() {
+            return new ID(order, cns);
         }
 
         @Data

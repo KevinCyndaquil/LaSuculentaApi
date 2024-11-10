@@ -19,7 +19,6 @@ public interface WebSocketService {
     }
 
     default WebSocketSession getSession(@NonNull String id) {
-        System.out.println(sessions);
         return sessions.get(id);
     }
 
@@ -29,6 +28,11 @@ public interface WebSocketService {
 
     default void notify(@NonNull String id, WSResponse response) {
         WebSocketSession session = getSession(id);
+        if (session == null) {
+            System.out.printf("Skipping notify %s not found%n", id);
+            return;
+        }
+
         try {
             var message = new TextMessage(mapper.writeValueAsString(response));
             session.sendMessage(message);
