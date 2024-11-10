@@ -98,7 +98,7 @@ public class Order {
 
         @JsonProperty("dish_dto")
         public DishDTO getDishDTO() {
-            return new DishDTO(dish.getId(), dish.name);
+            return new DishDTO(dish.getId(), dish.name, dish.category);
         }
 
         @Data
