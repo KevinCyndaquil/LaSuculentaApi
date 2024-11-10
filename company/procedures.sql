@@ -254,3 +254,16 @@ $$
 
 SELECT * FROM taken_tables();
 
+SELECT * FROM order_details WHERE  current_process = 'WAITING_KITCHENER';
+
+SELECT od.ready_on, od.current_process, o.client_name, di.name, k.name, w.name
+FROM orders o
+	     INNER JOIN order_details od ON o.id = od.order_id
+	     INNER JOIN dishes di ON od.dish_id = di.id
+	     INNER JOIN  kitcheners k ON od.made_by_id = k.id
+	     INNER JOIN  waiters w ON o.take_by_id = w.id
+WHERE od.current_process = 'WAITING_KITCHENER'
+   OR od.current_process = 'GETTING_READY'
+   OR od.current_process = 'READY_TO_DELIVER'
+   ORDER BY o.id;
+

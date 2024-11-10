@@ -75,6 +75,7 @@ public class OrderService implements CrudService<Order, UUID> {
             .toList();
     }
 
+    @Transactional
     public List<ActionResponse> finish(@NonNull List<Order.Detail> details) {
         return details.stream()
             .map(detail -> {

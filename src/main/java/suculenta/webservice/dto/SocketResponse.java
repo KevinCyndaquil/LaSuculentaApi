@@ -1,26 +1,25 @@
 package suculenta.webservice.dto;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NonNull;
+
+import java.util.Map;
 
 public record SocketResponse(
     SocketAction action,
-    String message,
+    @JsonProperty("message") Object message,
     String content
 ) {
-    public static SocketResponse plaintText(SocketAction action, String message) {
+    public static SocketResponse plaintText(SocketAction action, Object message) {
         return new SocketResponse(action, message, "plain-text");
     }
 
-    public static <T> SocketResponse json(SocketAction action, T object) {
+    public static <T> SocketResponse json(SocketAction action, @NonNull T object) {
         ObjectMapper mapper = new ObjectMapper();
-        try {
-            return new SocketResponse(
-                action,
-                mapper.writeValueAsString(object),
-                "json");
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return new SocketResponse(
+            action,
+            mapper.convertValue(object, Map.class),
+            "json");
     }
 }
