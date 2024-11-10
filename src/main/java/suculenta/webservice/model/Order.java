@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import suculenta.webservice.dto.DishDTO;
 import suculenta.webservice.group.OnlyRef;
 import suculenta.webservice.group.Postable;
 
@@ -80,7 +81,8 @@ public class Order {
         @JoinColumn(name = "made_by_id")
         Kitchener madeBy;
 
-        @ManyToOne(fetch = FetchType.LAZY)
+        @ManyToOne
+        @JsonIgnore
         @NotNull(groups = Postable.class)
         Dish dish;
 
@@ -92,6 +94,11 @@ public class Order {
         @JsonIgnore
         public ID getId() {
             return new ID(order, cns);
+        }
+
+        @JsonProperty("dish_dto")
+        public DishDTO getDishDTO() {
+            return new DishDTO(dish.getId(), dish.name);
         }
 
         @Data

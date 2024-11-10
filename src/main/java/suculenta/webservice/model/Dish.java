@@ -19,7 +19,7 @@ import java.util.UUID;
 @AllArgsConstructor
 
 @Entity(name = "dishes")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Dish {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -35,7 +35,7 @@ public class Dish {
 
     @JsonManagedReference
     @NotNull(groups = Postable.class)
-    @OneToMany(mappedBy = "dish")
+    @OneToMany(mappedBy = "dish", fetch = FetchType.LAZY)
     List<Recipe> recipe;
 
     @NotNull(groups = Postable.class)

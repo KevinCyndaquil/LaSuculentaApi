@@ -1,5 +1,7 @@
 package suculenta.webservice.dto;
 
+import suculenta.webservice.model.Kitchener;
+import suculenta.webservice.model.Order;
 import suculenta.webservice.model.Waiter;
 
 import java.sql.Date;
@@ -16,6 +18,11 @@ public record OrderDTO(
 ) {
 
     public record DetailsDTO(
-
+        UUID order_id,
+        int cns,
+        Date ready_on,
+        Order.Process current_process,
+        Kitchener made_by,
+        UUID dish_id
     ) {}
 }
