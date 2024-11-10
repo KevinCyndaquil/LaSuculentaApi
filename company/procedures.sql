@@ -195,6 +195,7 @@ CREATE OR REPLACE FUNCTION sales_report()
 		ingredient_id   uuid,
 		ingredient_name varchar(255),
 		quantity_used   numeric(10, 2),
+		current_stock   numeric(10, 2),
 		day_of_week     varchar(15),
 		date            date,
 		unit            varchar(15)
@@ -203,9 +204,10 @@ AS
 $$
 BEGIN
 	RETURN QUERY
-		WITH recipe_table AS (SELECT i.id   AS id,
-		                             i.name AS name,
-		                             i.unit AS unit,
+		WITH recipe_table AS (SELECT i.id    AS id,
+		                             i.name  AS name,
+		                             i.unit  AS unit,
+		                             i.stock AS stock,
 		                             r.quantity
 		                      FROM dishes d
 			                           INNER JOIN recipes r ON d.id = r.dish_id
@@ -213,6 +215,7 @@ BEGIN
 		SELECT recipe_table.id::uuid                                AS ingredient_id,
 		       recipe_table.name ::varchar(255)                     AS ingredient_name,
 		       count(i.id) * recipe_table.quantity ::numeric(10, 2) AS quantity_used,
+		       recipe_table.stock ::numeric(10, 2)                  AS current_stock,
 		       to_char(od.ready_on, 'FMDay') ::varchar(15)          AS day_of_week,
 		       od.ready_on ::date                                   AS date,
 		       recipe_table.unit ::varchar(15)                      AS unit
@@ -224,11 +227,14 @@ BEGIN
 		         recipe_table.name,
 		         recipe_table.unit,
 		         recipe_table.quantity,
+		         recipe_table.stock,
 		         od.ready_on;
 END;
 $$ LANGUAGE plpgsql;
 
 SELECT * FROM sales_report();
+
+SELECT * FROM order_details WHERE dish_id IS NULL;
 
 CREATE OR REPLACE FUNCTION taken_tables()
 	RETURNS table (
