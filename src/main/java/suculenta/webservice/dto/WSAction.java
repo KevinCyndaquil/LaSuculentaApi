@@ -1,6 +1,6 @@
 package suculenta.webservice.dto;
 
-public enum SocketAction {
+public enum WSAction {
     /**
      * Ocurre cuando un mesero completa una order con exito, entonces se le notifica al chef para que comience a
      * realizar el pedido. El chef debe actualizar la tabla.

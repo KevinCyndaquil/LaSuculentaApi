@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-import suculenta.webservice.dto.SocketResponse;
+import suculenta.webservice.dto.WSResponse;
 
 import java.io.IOException;
 import java.util.Map;
@@ -27,7 +27,7 @@ public interface WebSocketService {
         return sessions.remove(id);
     }
 
-    default void notify(@NonNull String id, SocketResponse response) {
+    default void notify(@NonNull String id, WSResponse response) {
         WebSocketSession session = getSession(id);
         try {
             var message = new TextMessage(mapper.writeValueAsString(response));
@@ -37,7 +37,7 @@ public interface WebSocketService {
         }
     }
 
-    default void broadcast(SocketResponse response) {
+    default void broadcast(WSResponse response) {
         sessions.values().forEach(session -> {
             try {
                 var message = new TextMessage(mapper.writeValueAsString(response));

@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import suculenta.webservice.dto.ActionResponse;
+import suculenta.webservice.dto.Response;
 import suculenta.webservice.dto.KitchenerOrder;
 import suculenta.webservice.model.Order;
 import suculenta.webservice.service.OrderService;
@@ -44,17 +44,17 @@ public class OrderController implements CrudController<Order, UUID> {
     }
 
     @PutMapping("assign")
-    public ResponseEntity<List<ActionResponse>> assign(@RequestBody List<Order.Detail> details) {
+    public ResponseEntity<List<Response<Order.Detail>>> assign(@RequestBody List<Order.Detail> details) {
         return ResponseEntity.ok(service.assign(details));
     }
 
     @PutMapping("finish")
-    public ResponseEntity<List<ActionResponse>> finish(@RequestBody List<Order.Detail> details) {
+    public ResponseEntity<List<Response<Order.Detail>>> finish(@RequestBody List<Order.Detail> details) {
         return ResponseEntity.ok(service.finish(details));
     }
 
     @PutMapping("deliver")
-    public ResponseEntity<List<ActionResponse>> delivered(@RequestBody List<Order.Detail> details) {
+    public ResponseEntity<List<Response<Order.Detail>>> delivered(@RequestBody List<Order.Detail> details) {
         return ResponseEntity.ok(service.deliver(details));
     }
 
@@ -69,5 +69,10 @@ public class OrderController implements CrudController<Order, UUID> {
         @RequestParam("until") Date until,
         Pageable pageable) {
         return ResponseEntity.ok(service().selectSold(since, until, pageable));
+    }
+
+    @GetMapping("ready")
+    public ResponseEntity<Page<Order>> selectReady(Pageable pageable) {
+        return ResponseEntity.ok(service().selectReady(pageable));
     }
 }

@@ -6,18 +6,18 @@ import lombok.NonNull;
 
 import java.util.Map;
 
-public record SocketResponse(
-    SocketAction action,
+public record WSResponse(
+    WSAction action,
     @JsonProperty("message") Object message,
     String content
 ) {
-    public static SocketResponse plaintText(SocketAction action, Object message) {
-        return new SocketResponse(action, message, "plain-text");
+    public static WSResponse plaintText(WSAction action, Object message) {
+        return new WSResponse(action, message, "plain-text");
     }
 
-    public static <T> SocketResponse json(SocketAction action, @NonNull T object) {
+    public static <T> WSResponse json(WSAction action, @NonNull T object) {
         ObjectMapper mapper = new ObjectMapper();
-        return new SocketResponse(
+        return new WSResponse(
             action,
             mapper.convertValue(object, Map.class),
             "json");

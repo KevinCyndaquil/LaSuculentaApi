@@ -4,7 +4,7 @@ import lombok.NonNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import suculenta.webservice.dto.ActionResponse;
+import suculenta.webservice.dto.Response;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,17 +29,17 @@ public interface CrudService<T, ID> {
         return repository().findAll(pageable);
     }
 
-    default List<ActionResponse> save(@NonNull List<T> entity) {
+    default List<Response<T>> save(@NonNull List<T> entity) {
         return entity.stream()
             .map(repository()::save)
-            .map(ActionResponse::success)
+            .map(Response::success)
             .toList();
     }
 
-    default List<ActionResponse> update(@NonNull List<T> entity) {
+    default List<Response<T>> update(@NonNull List<T> entity) {
         return entity.stream()
             .map(repository()::save)
-            .map(ActionResponse::success)
+            .map(Response::success)
             .toList();
     }
 

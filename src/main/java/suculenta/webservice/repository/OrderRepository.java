@@ -15,6 +15,14 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query(value = "SELECT is_ready(:order)", nativeQuery = true)
     boolean isReady(@Param("order") UUID orderId);
 
+    @Query(value = "SELECT * FROM orders WHERE is_ready(id) = true ORDER BY requested_on DESC OFFSET :offset LIMIT :limit", nativeQuery = true)
+    List<Order> selectReady(
+        @Param("offset") long offset,
+        @Param("limit") int limit);
+
+    @Query(value = "SELECT count(*) FROM orders WHERE is_ready(id) = true", nativeQuery = true)
+    long countReady();
+
     @Query(value = "SELECT * FROM orders ORDER BY requested_on DESC", nativeQuery = true)
     Page<Order> selectAll(Pageable pageable);
 
