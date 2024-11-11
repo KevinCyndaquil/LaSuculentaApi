@@ -175,7 +175,7 @@ public class OrderService implements CrudService<Order, UUID> {
             System.out.printf("There is %s sales%n", todaySales);
             return;
         }
-        var predicted = ingredientService.predict(Date.valueOf(LocalDate.now()))
+        var predicted = ingredientService.predict(Date.valueOf(LocalDate.now().plusDays(1)))
             .stream()
             .filter(prediction -> prediction.priority().equals("mucho"))
             .map(PredictedIngredient::name)
