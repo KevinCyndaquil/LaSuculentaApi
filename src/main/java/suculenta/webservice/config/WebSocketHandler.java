@@ -31,6 +31,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
             default -> System.out.println("Invalid role");
         }
 
+        System.out.println();
+
         super.afterConnectionEstablished(session);
     }
 
