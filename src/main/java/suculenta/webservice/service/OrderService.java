@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,7 @@ import suculenta.webservice.repository.OrdenDetailRepository;
 import suculenta.webservice.repository.OrderRepository;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +33,8 @@ public class OrderService implements CrudService<Order, UUID> {
     private final WaiterService waiterService;
     private final KitchenerService kitchenerService;
     private final EntityManager entityManager;
+    private final IngredientService ingredientService;
+    private final AdminService adminService;
 
     @Override
     public OrderRepository repository() {
@@ -143,9 +147,23 @@ public class OrderService implements CrudService<Order, UUID> {
                 var upDetail = detailsRepository.findById(detail.getId())
                     .orElseThrow(() -> new RuntimeException("Order not found"));
 
+                checkOutSales();
+
                 return Response.from(result, upDetail);
             })
             .toList();
+    }
+
+    @Async
+    public void checkOutSales() {
+        long todaySales = repository.countTodaySales();
+
+        if (todaySales % 2 != 0) {
+            System.out.printf("There is %s sales%n", todaySales);
+            return;
+        }
+        var predicted = ingredientService.predict(Date.valueOf(LocalDate.now()));
+        adminService.broadcast(WSResponse.json(WSAction.NEW_PREDICTION, predicted));
     }
 
     @Override

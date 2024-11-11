@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import suculenta.webservice.service.AdminService;
 import suculenta.webservice.service.KitchenerService;
 import suculenta.webservice.service.WaiterService;
 
@@ -15,6 +16,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 
     private final WaiterService waiterService;
     private final KitchenerService kitchenerService;
+    private final AdminService adminService;
 
     @Override
     public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
@@ -25,6 +27,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
             waiterService.register(userId, session);
         if (role.equals("kitchener"))
             kitchenerService.register(userId, session);
+        if (role.equals("admin"))
+            adminService.register(userId, session);
 
         super.afterConnectionEstablished(session);
     }

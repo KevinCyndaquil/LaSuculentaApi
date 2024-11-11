@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import suculenta.webservice.dto.OrderDTO;
 import suculenta.webservice.model.Order;
 
 import java.sql.Date;
@@ -16,13 +15,16 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query(value = "SELECT is_ready(:order)", nativeQuery = true)
     boolean isReady(@Param("order") UUID orderId);
 
-    @Query(value = "SELECT * FROM orders WHERE is_ready(id) = true ORDER BY requested_on DESC OFFSET :offset LIMIT :limit", nativeQuery = true)
+    @Query(value = "SELECT * FROM orders WHERE is_ready(id) = TRUE ORDER BY requested_on DESC OFFSET :offset LIMIT :limit", nativeQuery = true)
     List<Order> selectReady(
         @Param("offset") long offset,
         @Param("limit") int limit);
 
-    @Query(value = "SELECT count(*) FROM orders WHERE is_ready(id) = true", nativeQuery = true)
+    @Query(value = "SELECT count(*) FROM orders WHERE is_ready(id) = TRUE", nativeQuery = true)
     long countReady();
+
+    @Query(value = "SELECT count_today_sales()", nativeQuery = true)
+    long countTodaySales();
 
     @Query(value = "SELECT * FROM orders ORDER BY requested_on DESC", nativeQuery = true)
     Page<Order> selectAll(Pageable pageable);

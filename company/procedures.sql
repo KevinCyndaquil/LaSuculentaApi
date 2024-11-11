@@ -286,6 +286,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION count_today_sales()
+	RETURNS int AS
+$$
+BEGIN
+	RETURN (SELECT count(DISTINCT order_id) AS finalized_orders
+	        FROM order_details
+	        WHERE extract(YEAR FROM ready_on) = extract(YEAR FROM now())
+		      AND extract(MONTH FROM ready_on) = extract(MONTH FROM now())
+		      AND extract(DAY FROM ready_on) = extract(DAY FROM now())
+		      AND current_process = 'FINISHED');
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT count_today_sales();
+
 DROP FUNCTION count_last_month_ingredients_used();
 
 SELECT * FROM count_last_month_ingredients_used();
