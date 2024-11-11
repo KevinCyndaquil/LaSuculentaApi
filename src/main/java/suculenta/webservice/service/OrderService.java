@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
+import suculenta.webservice.dto.OrderDTO;
 import suculenta.webservice.dto.Response;
 import suculenta.webservice.dto.WSAction;
 import suculenta.webservice.dto.WSResponse;
@@ -43,6 +44,11 @@ public class OrderService implements CrudService<Order, UUID> {
     @Override
     public Page<Order> select(Pageable pageable) {
         return repository().selectAll(pageable);
+    }
+
+    public Page<OrderDTO> selectDTO(Pageable pageable) {
+        return repository().selectAll(pageable)
+            .map(OrderDTO::toDTO);
     }
 
     public Page<Order.Detail> select(

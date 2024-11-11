@@ -82,7 +82,6 @@ public class Order {
         Kitchener madeBy;
 
         @ManyToOne
-        @JsonIgnore
         @NotNull(groups = Postable.class)
         Dish dish;
 

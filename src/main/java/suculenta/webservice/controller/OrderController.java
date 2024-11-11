@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import suculenta.webservice.dto.OrderDTO;
 import suculenta.webservice.dto.Response;
 import suculenta.webservice.dto.KitchenerOrder;
 import suculenta.webservice.model.Order;
@@ -59,8 +60,8 @@ public class OrderController implements CrudController<Order, UUID> {
     }
 
     @GetMapping("pages")
-    public ResponseEntity<Page<Order>> select(Pageable pageable) {
-        return ResponseEntity.ok(service().select(pageable));
+    public ResponseEntity<Page<OrderDTO>> select(Pageable pageable) {
+        return ResponseEntity.ok(service().selectDTO(pageable));
     }
 
     @GetMapping("sold")

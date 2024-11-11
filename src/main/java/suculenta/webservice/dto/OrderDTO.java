@@ -1,5 +1,6 @@
 package suculenta.webservice.dto;
 
+import lombok.NonNull;
 import suculenta.webservice.model.Kitchener;
 import suculenta.webservice.model.Order;
 import suculenta.webservice.model.Waiter;
@@ -23,6 +24,31 @@ public record OrderDTO(
         Date ready_on,
         Order.Process current_process,
         Kitchener made_by,
-        UUID dish_id
-    ) {}
+        DishDTO dish_id
+    ) {
+
+        public static List<DetailsDTO> toDTO(List<Order.Detail> orders) {
+            return orders.stream()
+                .map(detail -> new DetailsDTO(
+                    detail.getOrderId(),
+                    detail.getCns(),
+                    detail.getReady_on(),
+                    detail.getCurrentProcess(),
+                    detail.getMadeBy(),
+                    DishDTO.toDTO(detail.getDish())
+                ))
+                .toList();
+        }
+    }
+
+    public static OrderDTO toDTO(@NonNull Order order) {
+        return new OrderDTO(
+            order.getId(),
+            order.getTable_number(),
+            order.getClient_name(),
+            order.getRequested_on(),
+            order.getTake_by(),
+            OrderDTO.DetailsDTO.toDTO(order.getDetails())
+        );
+    }
 }
