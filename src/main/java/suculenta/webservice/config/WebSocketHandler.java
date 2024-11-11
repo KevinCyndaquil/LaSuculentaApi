@@ -42,6 +42,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
             waiterService.removeSession(userId).close();
         if (role.equals("kitchener"))
             kitchenerService.removeSession(userId).close();
+        if (role.equals("admin"))
+            adminService.removeSession(userId).close();
 
         super.afterConnectionClosed(session, status);
     }
