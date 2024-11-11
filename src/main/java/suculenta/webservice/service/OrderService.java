@@ -10,10 +10,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import suculenta.webservice.dto.OrderDTO;
-import suculenta.webservice.dto.Response;
-import suculenta.webservice.dto.WSAction;
-import suculenta.webservice.dto.WSResponse;
+import suculenta.webservice.dto.*;
 import suculenta.webservice.model.Kitchener;
 import suculenta.webservice.model.Order;
 import suculenta.webservice.repository.OrdenDetailRepository;
@@ -119,7 +116,9 @@ public class OrderService implements CrudService<Order, UUID> {
                 var upDetail = detailsRepository.findById(detail.getId())
                     .orElseThrow(() -> new RuntimeException("Order not found"));
 
-                if (repository.isReady(detail.getOrder().getId())) {
+                notifySoldOrder(detail);
+
+                /*if (repository.isReady(detail.getOrder().getId())) {
                     var order = repository().findById(detail.getOrder().getId())
                         .orElseThrow(() -> new NullPointerException("Error"));
                     var response = WSResponse.json(WSAction.FINISH_ORDER, order);
@@ -127,11 +126,25 @@ public class OrderService implements CrudService<Order, UUID> {
                     waiterService.notify(
                         order.getTake_by().getId().toString(),
                         response);
-                }
+                }*/
 
                 return Response.from(result, upDetail);
             })
             .toList();
+    }
+
+    @Async
+    public void notifySoldOrder(@NonNull Order.Detail detail) {
+        if (!repository.isReady(detail.getOrder().getId()))
+            return;
+
+        var order = repository().findById(detail.getOrder().getId())
+            .orElseThrow(() -> new NullPointerException("Error"));
+        var response = WSResponse.json(WSAction.FINISH_ORDER, order);
+
+        waiterService.notify(
+            order.getTake_by().getId().toString(),
+            response);
     }
 
     public List<Response<Order.Detail>> deliver(@NonNull List<Order.Detail> details) {
@@ -162,7 +175,14 @@ public class OrderService implements CrudService<Order, UUID> {
             System.out.printf("There is %s sales%n", todaySales);
             return;
         }
-        var predicted = ingredientService.predict(Date.valueOf(LocalDate.now()));
+        var predicted = ingredientService.predict(Date.valueOf(LocalDate.now()))
+            .stream()
+            .filter(prediction -> prediction.priority().equals("mucho"))
+            .map(PredictedIngredient::name)
+            .toList();
+
+        if (predicted.isEmpty())
+            return;
         adminService.broadcast(WSResponse.json(WSAction.NEW_PREDICTION, predicted));
     }
 
@@ -193,7 +213,7 @@ public class OrderService implements CrudService<Order, UUID> {
 
         kitchenerService.broadcast(WSResponse.plaintText(
             WSAction.NEW_ORDER,
-            "pene")
+            "new order")
         );
         return newOrder;
     }
