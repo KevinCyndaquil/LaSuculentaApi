@@ -22,13 +22,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(@NonNull WebSocketSession session) throws Exception {
         String userId = (String) session.getAttributes().get("userId");
         String role = (String) session.getAttributes().get("role");
+        System.out.println("up session attributes " + userId + " " + role);
 
-        if (role.equals("waiter"))
-            waiterService.register(userId, session);
-        if (role.equals("kitchener"))
-            kitchenerService.register(userId, session);
-        if (role.equals("admin"))
-            adminService.register(userId, session);
+        switch (role) {
+            case "waiter" -> waiterService.register(userId, session);
+            case "kitchener" -> kitchenerService.register(userId, session);
+            case "admin" -> adminService.register(userId, session);
+            default -> System.out.println("Invalid role");
+        }
 
         super.afterConnectionEstablished(session);
     }
@@ -37,13 +38,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(@NonNull WebSocketSession session, @NonNull CloseStatus status) throws Exception {
         String userId = (String) session.getAttributes().get("userId");
         String role = (String) session.getAttributes().get("role");
+        System.out.println("down session attributes " + userId + " " + role);
 
-        if (role.equals("waiter"))
-            waiterService.removeSession(userId).close();
-        if (role.equals("kitchener"))
-            kitchenerService.removeSession(userId).close();
-        if (role.equals("admin"))
-            adminService.removeSession(userId).close();
+        switch (role) {
+            case "waiter" -> waiterService.removeSession(userId).close();
+            case "kitchener" -> kitchenerService.removeSession(userId).close();
+            case "admin" -> adminService.removeSession(userId).close();
+            default -> System.out.println("Invalid role");
+        }
 
         super.afterConnectionClosed(session, status);
     }
