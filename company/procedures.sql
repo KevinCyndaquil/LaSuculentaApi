@@ -260,18 +260,33 @@ END;
 $$
 	LANGUAGE plpgsql;
 
-SELECT * FROM taken_tables();
+CREATE OR REPLACE FUNCTION count_last_month_ingredients_used()
+	RETURNS table (
+		id              uuid,
+		name            varchar,
+		unit            varchar,
+		stock           numeric(10, 2),
+		last_month_used numeric(10, 2)
+	)
+AS
+$$
+BEGIN
+	RETURN QUERY
+		SELECT i.id ::uuid,
+		       i.name ::varchar,
+		       i.unit ::varchar,
+		       i.stock ::numeric(10, 2),
+		       sum(r.quantity) ::numeric(10, 2) AS last_month_used
+		FROM order_details od
+			     INNER JOIN recipes r ON od.dish_id = r.dish_id
+			     INNER JOIN ingredients i ON r.ingredient_id = i.id
+		WHERE od.ready_on >= date_trunc('month', current_date) - INTERVAL '1 month'
+		  AND od.ready_on < date_trunc('month', current_date)
+		GROUP BY i.id;
+END;
+$$ LANGUAGE plpgsql;
 
-SELECT * FROM order_details WHERE current_process = 'WAITING_KITCHENER';
+DROP FUNCTION count_last_month_ingredients_used();
 
-SELECT od.ready_on, od.current_process, o.client_name, di.name, k.name, w.name
-FROM orders o
-	     INNER JOIN order_details od ON o.id = od.order_id
-	     INNER JOIN dishes di ON od.dish_id = di.id
-	     INNER JOIN kitcheners k ON od.made_by_id = k.id
-	     INNER JOIN waiters w ON o.take_by_id = w.id
-WHERE od.current_process = 'WAITING_KITCHENER'
-   OR od.current_process = 'GETTING_READY'
-   OR od.current_process = 'READY_TO_DELIVER'
-ORDER BY o.id;
+SELECT * FROM count_last_month_ingredients_used();
 

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import suculenta.webservice.dto.CountedIngredient;
 import suculenta.webservice.dto.PredictedIngredient;
 import suculenta.webservice.model.Ingredient;
 import suculenta.webservice.repository.IngredientRepository;
@@ -52,12 +53,16 @@ public class IngredientService implements CrudService<Ingredient, UUID> {
             new HttpEntity<>(body, headers),
             new ParameterizedTypeReference<>() {}
         );
+        var predictions = Objects.requireNonNull(response.getBody());
+        return repository.countLastMonthIngredientUsed().stream()
+            .map(ingredient -> {
+                var countedIngredient = new CountedIngredient(ingredient);
+                var prediction = predictions.stream()
+                    .filter(i -> i.name().equals(countedIngredient.name()))
+                    .findFirst()
+                    .orElse(PredictedIngredient.zero());
 
-        return Objects.requireNonNull(response.getBody()).stream()
-            .map(prediction -> {
-                var ingredient = repository.findByName(prediction.name())
-                    .orElseThrow(() -> new RuntimeException("Ingredient not found in prediction result"));
-                return prediction.complete(ingredient);
+                return prediction.complete(countedIngredient);
             })
             .toList();
     }
