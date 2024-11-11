@@ -5,9 +5,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 
-import java.util.List;
-import java.util.Map;
-
 public record WSResponse(
     WSAction action,
     @JsonProperty("message") Object message,
@@ -21,7 +18,7 @@ public record WSResponse(
         ObjectMapper mapper = new ObjectMapper();
         return new WSResponse(
             action,
-            mapper.convertValue(object, new TypeReference<List<Map<String, Object>>>() {}),
+            mapper.convertValue(object, new TypeReference<T>() {}),
             "json");
     }
 }
