@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.*;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +16,10 @@ import suculenta.webservice.dto.Response;
 import suculenta.webservice.model.*;
 import suculenta.webservice.service.*;
 
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 
 @SpringBootTest(classes = LaSuculentaApiApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class OrderTest {
@@ -135,7 +130,7 @@ public class OrderTest {
 
         Kitchener kitchener = kitchenerService.select().get(0);
         KitchenerOrder kitchenerOrder = new KitchenerOrder(
-            Order.Process.WAITING_KITCHENER,
+            Order.Process.FINISHED,
             kitchener);
 
         HttpHeaders headers = new HttpHeaders();
@@ -148,9 +143,10 @@ public class OrderTest {
             new ParameterizedTypeReference<Map<String, Object>>() {
             }
         );
+        assertNotNull(response.getBody());
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        List<Order.Detail> orderDetails = new ObjectMapper()
+        List<Object> orderDetails = new ObjectMapper()
             .convertValue(response.getBody().get("content"), new TypeReference<>() {});
         System.out.println(orderDetails);
     }
