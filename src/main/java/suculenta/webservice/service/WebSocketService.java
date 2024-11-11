@@ -42,6 +42,7 @@ public interface WebSocketService {
     }
 
     default void broadcast(WSResponse response) {
+        System.out.println(sessions.size());
         sessions.values().forEach(session -> {
             try {
                 var message = new TextMessage(mapper.writeValueAsString(response));

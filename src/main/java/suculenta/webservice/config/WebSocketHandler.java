@@ -41,9 +41,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
         System.out.println("down session attributes " + userId + " " + role);
 
         switch (role) {
-            case "waiter" -> waiterService.removeSession(userId).close();
-            case "kitchener" -> kitchenerService.removeSession(userId).close();
-            case "admin" -> adminService.removeSession(userId).close();
+            case "waiter" -> waiterService.removeSession(userId);
+            case "kitchener" -> kitchenerService.removeSession(userId);
+            case "admin" -> adminService.removeSession(userId);
             default -> System.out.println("Invalid role");
         }
 
