@@ -290,3 +290,4 @@ DROP FUNCTION count_last_month_ingredients_used();
 
 SELECT * FROM count_last_month_ingredients_used();
 
+UPDATE ingredients SET stock = stock + 100 WHERE stock > -99;

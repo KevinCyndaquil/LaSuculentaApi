@@ -30,8 +30,9 @@ public interface CrudController<T, ID> {
     }
 
     @DeleteMapping
-    default ResponseEntity<String> delete(@RequestParam("uuid") ID id) {
+    default ResponseEntity<Response<String>> delete(@RequestParam("uuid") ID id) {
         service().delete(id);
-        return ResponseEntity.ok("deleted %s".formatted(id));
+        return ResponseEntity.ok(
+            Response.success("deleted %s".formatted(id)));
     }
 }
