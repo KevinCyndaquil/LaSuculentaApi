@@ -6,6 +6,7 @@ import org.springframework.web.socket.WebSocketSession;
 import suculenta.webservice.model.Kitchener;
 import suculenta.webservice.repository.KitchenerRepository;
 
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,11 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @RequiredArgsConstructor
 public class KitchenerService implements CrudService<Kitchener, UUID>, WebSocketService {
+    Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
     private final KitchenerRepository repository;
-    ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
     @Override
-    public ConcurrentHashMap<String, WebSocketSession> sessions() {
+    public Map<String, WebSocketSession> sessions() {
         return sessions;
     }
 

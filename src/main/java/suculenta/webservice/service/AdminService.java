@@ -8,10 +8,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class AdminService implements WebSocketService{
-    ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
+    Map<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
     @Override
-    public ConcurrentHashMap<String, WebSocketSession> sessions() {
+    public Map<String, WebSocketSession> sessions() {
         return sessions;
     }
 }

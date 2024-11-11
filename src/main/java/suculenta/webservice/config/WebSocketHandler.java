@@ -28,10 +28,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
             case "waiter" -> waiterService.register(userId, session);
             case "kitchener" -> kitchenerService.register(userId, session);
             case "admin" -> adminService.register(userId, session);
-            default -> System.out.println("Invalid role");
+            default -> System.out.println("Invalid role " + role);
         }
-
-        System.out.println();
 
         super.afterConnectionEstablished(session);
     }
@@ -46,7 +44,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
             case "waiter" -> waiterService.removeSession(userId);
             case "kitchener" -> kitchenerService.removeSession(userId);
             case "admin" -> adminService.removeSession(userId);
-            default -> System.out.println("Invalid role");
+            default -> System.out.println("Invalid role" + role);
         }
 
         super.afterConnectionClosed(session, status);

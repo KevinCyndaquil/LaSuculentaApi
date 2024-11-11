@@ -8,12 +8,11 @@ import suculenta.webservice.dto.WSResponse;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public interface WebSocketService {
     ObjectMapper mapper = new ObjectMapper();
 
-    ConcurrentHashMap<String, WebSocketSession> sessions();
+    Map<String, WebSocketSession> sessions();
 
     default void register(@NonNull String id, WebSocketSession session) {
         sessions().put(id, session);
@@ -23,8 +22,8 @@ public interface WebSocketService {
         return sessions().get(id);
     }
 
-    default WebSocketSession removeSession(@NonNull String id)  {
-        return sessions().remove(id);
+    default void removeSession(@NonNull String id)  {
+        sessions().remove(id);
     }
 
     default void notify(@NonNull String id, WSResponse response) {
