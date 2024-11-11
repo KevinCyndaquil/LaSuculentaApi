@@ -1,9 +1,11 @@
 package suculenta.webservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NonNull;
 
+import java.util.List;
 import java.util.Map;
 
 public record WSResponse(
@@ -19,7 +21,7 @@ public record WSResponse(
         ObjectMapper mapper = new ObjectMapper();
         return new WSResponse(
             action,
-            mapper.convertValue(object, Map.class),
+            mapper.convertValue(object, new TypeReference<List<Map<String, Object>>>() {}),
             "json");
     }
 }
