@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface KitchenerRepository extends JpaRepository<Kitchener, UUID> {
-    @Query(value = "SELECT best_kitcheners(:since, :until)", nativeQuery = true)
+    @Query(value = "SELECT * FROM best_kitcheners(:since, :until) OFFSET :offset LIMIT :limit", nativeQuery = true)
     List<Kitchener> best(
         @Param("since") Date since,
-        @Param("until") Date until);
+        @Param("until") Date until,
+        long offset,
+        int limit);
 }

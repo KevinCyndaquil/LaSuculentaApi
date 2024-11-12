@@ -10,6 +10,8 @@ import suculenta.webservice.repository.DishRepository;
 import suculenta.webservice.repository.RecipeRepository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -22,6 +24,10 @@ public class DishService implements CrudService<Dish, UUID> {
     @Override
     public DishRepository repository() {
         return dishRepository;
+    }
+
+    public List<Map<String, Object>> selectSellTable() {
+        return repository().selectSellTable();
     }
 
     @Override

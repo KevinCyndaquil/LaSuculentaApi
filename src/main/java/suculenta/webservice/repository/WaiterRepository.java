@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.UUID;
 
 public interface WaiterRepository extends JpaRepository<Waiter, UUID> {
-    @Query(value = "SELECT best_waiters(:since, :until)", nativeQuery = true)
+    @Query(value = "SELECT * FROM best_waiters(:since, :until) OFFSET :offset LIMIT :limit", nativeQuery = true)
     List<Waiter> best(
         @Param("since") Date since,
-        @Param("until") Date until);
+        @Param("until") Date until,
+        long offset,
+        int limit);
 }

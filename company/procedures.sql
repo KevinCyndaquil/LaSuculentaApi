@@ -145,6 +145,23 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+SELECT * FROM sell_dishes_table();
+
+CREATE OR REPLACE FUNCTION in_process_orders()
+	RETURNS setof orders AS
+$$
+BEGIN
+	RETURN QUERY
+		SELECT o.*
+		FROM orders o
+			     INNER JOIN order_details od ON o.id = od.order_id
+		WHERE od.current_process != 'FINISHED'
+		ORDER BY o.requested_on DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT * FROM in_process_orders();
+
 CREATE OR REPLACE FUNCTION sold_orders(since date, until date)
 	RETURNS setof orders AS
 $$
@@ -160,12 +177,33 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+SELECT * FROM dishes;
+UPDATE dishes
+SET icon = 'https://lomaculinaria.com/wp-content/uploads/2022/09/Co%CC%81mo-Hacer-un-Omelette-Loma-Culinaria-1200x800-1-500x500.jpg'
+WHERE name = 'Omelette';
+
+UPDATE kitcheners
+SET name     = 'KEVIN',
+    lastname = 'FRANCISCO'
+WHERE name = 'John';
+
+
+
 CREATE OR REPLACE FUNCTION best_waiters(since date, until date)
-	RETURNS setof waiters AS
+	RETURNS table (
+		id          uuid,
+		name        varchar,
+		lastname    varchar,
+		orders_made int
+	)
+AS
 $$
 BEGIN
 	RETURN QUERY
-		SELECT w.*, sum(1) AS orders_taked
+		SELECT w.id ::uuid,
+		       w.name ::varchar,
+		       w.lastname ::varchar,
+		       sum(1) ::int AS orders_taked
 		FROM waiters w
 			     INNER JOIN orders o ON w.id = o.take_by_id
 		WHERE o.requested_on >= since
@@ -175,12 +213,23 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP FUNCTION best_waiters(since date, until date);
+
 CREATE OR REPLACE FUNCTION best_kitcheners(since date, until date)
-	RETURNS setof kitcheners AS
+	RETURNS table (
+		id          uuid,
+		name        varchar,
+		lastname    varchar,
+		orders_made int
+	)
+AS
 $$
 BEGIN
 	RETURN QUERY
-		SELECT k.*, sum(1) AS orders_made
+		SELECT k.id::uuid,
+		       k.name::varchar,
+		       k.lastname::varchar,
+		       sum(1)::int AS orders_made
 		FROM kitcheners k
 			     INNER JOIN order_details od ON k.id = od.made_by_id
 		WHERE od.ready_on >= since
@@ -189,6 +238,9 @@ BEGIN
 		ORDER BY orders_made DESC;
 END;
 $$ LANGUAGE plpgsql;
+
+DROP FUNCTION best_kitcheners(since date, until date);
+SELECT * FROM best_waiters('2024-10-11', '2024-11-11');
 
 CREATE OR REPLACE FUNCTION sales_report()
 	RETURNS table (
@@ -286,20 +338,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION count_today_sales()
+CREATE OR REPLACE FUNCTION count_sales(request_date date)
 	RETURNS int AS
 $$
 BEGIN
 	RETURN (SELECT count(DISTINCT order_id) AS finalized_orders
 	        FROM order_details
-	        WHERE extract(YEAR FROM ready_on) = extract(YEAR FROM now())
-		      AND extract(MONTH FROM ready_on) = extract(MONTH FROM now())
-		      AND extract(DAY FROM ready_on) = extract(DAY FROM now())
+	        WHERE ready_on = request_date
 		      AND current_process = 'FINISHED');
 END;
 $$ LANGUAGE plpgsql;
 
-SELECT count_today_sales();
+
+SELECT count(DISTINCT order_id) FROM order_details WHERE ready_on = '2024-11-11' AND current_process = 'FINISHED';
+
+SELECT * FROM count_sales('2024-11-11');
 
 DROP FUNCTION count_last_month_ingredients_used();
 

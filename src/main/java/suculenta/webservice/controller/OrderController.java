@@ -72,6 +72,11 @@ public class OrderController implements CrudController<Order, UUID> {
         return ResponseEntity.ok(service().selectSold(since, until, pageable));
     }
 
+    @GetMapping("process")
+    public ResponseEntity<List<Order>> inProcess() {
+        return ResponseEntity.ok(service.selectInProcess());
+    }
+
     @GetMapping("ready")
     public ResponseEntity<Page<Order>> selectReady(Pageable pageable) {
         return ResponseEntity.ok(service().selectReady(pageable));

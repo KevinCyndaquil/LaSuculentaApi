@@ -23,8 +23,8 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     @Query(value = "SELECT count(*) FROM orders WHERE is_ready(id) = TRUE", nativeQuery = true)
     long countReady();
 
-    @Query(value = "SELECT count_today_sales()", nativeQuery = true)
-    long countTodaySales();
+    @Query(value = "SELECT count_sales(:requested)", nativeQuery = true)
+    long countTodaySales(Date requested);
 
     @Query(value = "SELECT * FROM orders ORDER BY requested_on DESC", nativeQuery = true)
     Page<Order> selectAll(Pageable pageable);
@@ -35,4 +35,7 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
         @Param("until") Date until,
         @Param("offset") long offset,
         @Param("limit") int limit);
+
+    @Query(value = "SELECT * FROM in_process_orders()", nativeQuery = true)
+    List<Order> inProcessOrders();
 }

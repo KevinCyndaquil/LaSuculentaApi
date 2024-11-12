@@ -78,6 +78,10 @@ public class OrderService implements CrudService<Order, UUID> {
             repository.count());
     }
 
+    public List<Order> selectInProcess() {
+        return repository.inProcessOrders();
+    }
+
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public List<Response<Order.Detail>> assign(@NonNull List<Order.Detail> details) {
         return details.stream()
@@ -169,7 +173,8 @@ public class OrderService implements CrudService<Order, UUID> {
 
     @Async
     public void checkOutSales() {
-        long todaySales = repository.countTodaySales();
+        long todaySales = repository.countTodaySales(Date.valueOf(LocalDate.now()));
+        System.out.println("ts " + todaySales);
 
         if (todaySales % 2 != 0) {
             System.out.printf("There is %s sales%n", todaySales);
