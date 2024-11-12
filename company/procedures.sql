@@ -349,7 +349,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-
 SELECT count(DISTINCT order_id) FROM order_details WHERE ready_on = '2024-11-11' AND current_process = 'FINISHED';
 
 SELECT * FROM count_sales('2024-11-11');
