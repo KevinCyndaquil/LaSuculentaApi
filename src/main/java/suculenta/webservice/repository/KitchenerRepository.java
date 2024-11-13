@@ -7,11 +7,12 @@ import suculenta.webservice.model.Kitchener;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface KitchenerRepository extends JpaRepository<Kitchener, UUID> {
     @Query(value = "SELECT * FROM best_kitcheners(:since, :until) OFFSET :offset LIMIT :limit", nativeQuery = true)
-    List<Kitchener> best(
+    List<Map<String, Object>> best(
         @Param("since") Date since,
         @Param("until") Date until,
         long offset,

@@ -7,11 +7,12 @@ import suculenta.webservice.model.Waiter;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface WaiterRepository extends JpaRepository<Waiter, UUID> {
     @Query(value = "SELECT * FROM best_waiters(:since, :until) OFFSET :offset LIMIT :limit", nativeQuery = true)
-    List<Waiter> best(
+    List<Map<String, Object>> best(
         @Param("since") Date since,
         @Param("until") Date until,
         long offset,

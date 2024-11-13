@@ -32,7 +32,7 @@ public class KitchenerService implements CrudService<Kitchener, UUID>, WebSocket
         return repository;
     }
 
-    public Page<Kitchener> selectBest(Date since, Date until, @NonNull Pageable pageable) {
+    public Page<Map<String, Object>> selectBest(Date since, Date until, @NonNull Pageable pageable) {
         var result = repository.best(since, until, pageable.getOffset(), pageable.getPageSize());
         return new PageImpl<>(result, pageable, repository.count());
     }

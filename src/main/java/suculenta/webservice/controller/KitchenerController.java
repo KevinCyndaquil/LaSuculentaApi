@@ -13,6 +13,7 @@ import suculenta.webservice.model.Kitchener;
 import suculenta.webservice.service.KitchenerService;
 
 import java.sql.Date;
+import java.util.Map;
 import java.util.UUID;
 
 @Validated
@@ -29,7 +30,7 @@ public class KitchenerController implements CrudController<Kitchener, UUID> {
     }
 
     @GetMapping("best")
-    public ResponseEntity<Page<Kitchener>> findBest(
+    public ResponseEntity<Page<Map<String, Object>>> findBest(
         @RequestParam("since") Date since,
         @RequestParam("from") Date from,
         Pageable pageable) {

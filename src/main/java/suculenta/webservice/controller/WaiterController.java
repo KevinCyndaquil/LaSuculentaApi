@@ -6,11 +6,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import suculenta.webservice.model.Kitchener;
 import suculenta.webservice.model.Waiter;
 import suculenta.webservice.service.WaiterService;
 
 import java.sql.Date;
+import java.util.Map;
 import java.util.UUID;
 
 @Validated
@@ -28,7 +28,7 @@ public class WaiterController implements CrudController<Waiter, UUID> {
     }
 
     @GetMapping("best")
-    public ResponseEntity<Page<Waiter>> findBest(
+    public ResponseEntity<Page<Map<String, Object>>> findBest(
         @RequestParam("since") Date since,
         @RequestParam("from") Date from,
         Pageable pageable) {

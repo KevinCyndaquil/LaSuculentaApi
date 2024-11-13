@@ -7,7 +7,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
-import suculenta.webservice.model.Kitchener;
 import suculenta.webservice.model.Waiter;
 import suculenta.webservice.repository.WaiterRepository;
 
@@ -32,7 +31,7 @@ public class WaiterService implements CrudService<Waiter, UUID>, WebSocketServic
         return repository;
     }
 
-    public Page<Waiter> selectBest(Date since, Date until, @NonNull Pageable pageable) {
+    public Page<Map<String, Object>> selectBest(Date since, Date until, @NonNull Pageable pageable) {
         var result = repository.best(since, until, pageable.getOffset(), pageable.getPageSize());
         return new PageImpl<>(result, pageable, repository.count());
     }
